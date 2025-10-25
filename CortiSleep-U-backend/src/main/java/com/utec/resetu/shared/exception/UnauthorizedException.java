@@ -1,5 +1,6 @@
 package com.utec.resetu.shared.exception;
-
-public class UnauthorizedException {
-    
+class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException(String message) {
+        super(message);
+    }
 }
