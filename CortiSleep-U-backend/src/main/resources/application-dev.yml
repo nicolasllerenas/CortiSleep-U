@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: resetu-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/resetu_db_dev
+    username: resetu_user
+    password: resetu_pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
+  flyway:
+    enabled: true
+
+jwt:
+  secret: dev-super-secret-key-change-it
+  expiration: 3600000 # 1h en ms
+
+logging:
+  level:
+    com.utec.resetu: DEBUG
+    org.springframework.security: DEBUG
