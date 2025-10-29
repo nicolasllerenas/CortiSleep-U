@@ -24,7 +24,7 @@ public class ProfileController {
     @Operation(summary = "Obtener perfil del usuario autenticado")
     public ResponseEntity<ApiResponse<ProfileResponse>> getMyProfile() {
         ProfileResponse profile = profileService.getMyProfile();
-        return ResponseEntity.ok(ApiResponse.success(profile));
+        return ResponseEntity.ok(ApiResponse.success("Perfil de usuario autenticado", profile));
     }
     
     @PutMapping("/me")
@@ -32,7 +32,7 @@ public class ProfileController {
     public ResponseEntity<ApiResponse<ProfileResponse>> updateMyProfile(
             @Valid @RequestBody ProfileRequest request) {
         ProfileResponse profile = profileService.updateMyProfile(request);
-        return ResponseEntity.ok(ApiResponse.success(profile));
+        return ResponseEntity.ok(ApiResponse.success("Perfil actualizado ",profile));
     }
     
     @PostMapping("/me")
@@ -41,6 +41,6 @@ public class ProfileController {
             @Valid @RequestBody ProfileRequest request) {
         ProfileResponse profile = profileService.createMyProfile(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(profile));
+                .body(ApiResponse.success("Perfil creado", profile));
     }
 }
