@@ -9,12 +9,12 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.13.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.0",
-    "react-scripts": "5.0.0",
+    "react-scripts": "^5.0.1",
     "redux": "^4.1.0",
     "typescript": "^4.4.3"
   },
@@ -24,5 +24,17 @@
     "@types/react-redux": "^7.1.21",
     "@types/react-router-dom": "^5.1.7",
     "@types/redux": "^3.6.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
