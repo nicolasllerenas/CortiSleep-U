@@ -32,7 +32,7 @@ public class CheckInController {
             @Valid @RequestBody CheckInRequest request) {
         CheckInResponse checkIn = checkInService.createCheckIn(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(checkIn));
+                .body(ApiResponse.success("Check-in realizado correctamente", checkIn));
     }
     
     @GetMapping("/my")
@@ -40,20 +40,20 @@ public class CheckInController {
     public ResponseEntity<ApiResponse<PageResponse<CheckInResponse>>> getMyCheckIns(
             Pageable pageable) {
         PageResponse<CheckInResponse> checkIns = checkInService.getMyCheckIns(pageable);
-        return ResponseEntity.ok(ApiResponse.success(checkIns));
+        return ResponseEntity.ok(ApiResponse.success("Check-ins obtenidos", checkIns));
     }
     
     @GetMapping("/stats")
     @Operation(summary = "Obtener estadísticas de check-ins")
     public ResponseEntity<ApiResponse<CheckInStatsDto>> getCheckInStats() {
         CheckInStatsDto stats = checkInService.getCheckInStats();
-        return ResponseEntity.ok(ApiResponse.success(stats));
+        return ResponseEntity.ok(ApiResponse.success("Estadisticas de Check-ins retornadas",stats));
     }
     
     @GetMapping("/today")
     @Operation(summary = "Obtener check-ins de hoy")
     public ResponseEntity<ApiResponse<List<CheckInResponse>>> getTodayCheckIns() {
         List<CheckInResponse> checkIns = checkInService.getTodayCheckIns();
-        return ResponseEntity.ok(ApiResponse.success(checkIns));
+        return ResponseEntity.ok(ApiResponse.success("Check-Ins de hoy encontrados",checkIns));
     }
 }

@@ -41,8 +41,16 @@ public class CheckInService {
     public PageResponse<CheckInResponse> getMyCheckIns(Pageable pageable) {
         // TODO: Obtener userId del contexto de seguridad
         Long userId = 1L; // Placeholder
+
+        List<CheckIn> allCheckIns = checkInRepository.findByUserIdOrderByCheckInTimeDesc(userId);
         
-        Page<CheckIn> checkIns = checkInRepository.findByUserIdOrderByCheckInTimeDesc(userId, pageable);
+        Page<CheckIn> checkInPage = new org.springframework.data.domain.PageImpl<>(
+                allCheckIns,
+                pageable,
+                allCheckIns.size()
+        );
+        
+        Page<CheckIn> checkIns = checkInPage;
         
         List<CheckInResponse> responses = checkIns.getContent()
                 .stream()
@@ -54,7 +62,7 @@ public class CheckInService {
                 .totalElements(checkIns.getTotalElements())
                 .totalPages(checkIns.getTotalPages())
                 .size(checkIns.getSize())
-                .number(checkIns.getNumber())
+                .totalElements(checkIns.getTotalElements())
                 .build();
     }
     
