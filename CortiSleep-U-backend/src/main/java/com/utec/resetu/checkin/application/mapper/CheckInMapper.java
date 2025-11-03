@@ -3,18 +3,39 @@ package com.utec.resetu.checkin.application.mapper;
 import com.utec.resetu.checkin.application.dto.CheckInRequest;
 import com.utec.resetu.checkin.application.dto.CheckInResponse;
 import com.utec.resetu.checkin.domain.model.CheckIn;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface CheckInMapper {
+@Component
+public class CheckInMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    CheckIn toEntity(CheckInRequest request);
+    public CheckIn toEntity(CheckInRequest request) {
+        if (request == null) return null;
+        return CheckIn.builder()
+                .locationName(request.getLocationName())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .moodScore(request.getMoodScore())
+                .stressLevel(request.getStressLevel())
+                .energyLevel(request.getEnergyLevel())
+                .notes(request.getNotes())
+                .build();
+    }
 
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "createdAt", source = "createdAt", dateFormat = "yyyy-MM-dd'T'HH:mm:ss")
-    CheckInResponse toDto(CheckIn checkIn);
+    public CheckInResponse toResponse(CheckIn checkIn) {
+        if (checkIn == null) return null;
+        return CheckInResponse.builder()
+                .id(checkIn.getId())
+                .userId(checkIn.getUserId())
+                .locationName(checkIn.getLocationName())
+                .latitude(checkIn.getLatitude())
+                .longitude(checkIn.getLongitude())
+                .moodScore(checkIn.getMoodScore())
+                .stressLevel(checkIn.getStressLevel())
+                .energyLevel(checkIn.getEnergyLevel())
+                .notes(checkIn.getNotes())
+                .checkInTime(checkIn.getCheckInTime())
+                .createdAt(checkIn.getCreatedAt())
+                .updatedAt(checkIn.getUpdatedAt())
+                .build();
+    }
 }
