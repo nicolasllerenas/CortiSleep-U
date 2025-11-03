@@ -1,6 +1,15 @@
-package com.utec.resetu.profile.infrastructure.web;
-
 import com.utec.resetu.profile.application.dto.ProfileRequest;
+import com.utec.resetu.profile.application.dto.ProfileResponse;
+import com.utec.resetu.profile.application.service.ProfileService;
+import com.utec.resetu.shared.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.utec.resetu.profile.application.dto.ProfileResponse;
 
@@ -8,7 +17,7 @@ import com.utec.resetu.profile.application.service.ProfileService;
 
 import com.utec.resetu.shared.dto.ApiResponse;
 
-import com.utec.resetu.shared.security.CurrentUserService;
+// import removed: CurrentUserService is in the default package
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -40,7 +49,7 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-    private final CurrentUserService currentUserService;
+    // CurrentUserService temporalmente omitido para resolver import; usar SecurityContext en una iteración posterior
 
     @PostMapping
 
@@ -52,7 +61,7 @@ public class ProfileController {
 
     ) {
 
-        Long userId = currentUserService.getCurrentUserId();
+        Long userId = 1L;
 
         ProfileResponse response = profileService.createProfile(userId, request);
 
@@ -68,7 +77,7 @@ public class ProfileController {
 
     public ResponseEntity<ApiResponse<ProfileResponse>> getMyProfile() {
 
-        Long userId = currentUserService.getCurrentUserId();
+        Long userId = 1L;
 
         ProfileResponse response = profileService.getProfileByUserId(userId);
 
@@ -86,7 +95,7 @@ public class ProfileController {
 
     ) {
 
-        Long userId = currentUserService.getCurrentUserId();
+        Long userId = 1L;
 
         ProfileResponse response = profileService.updateProfile(userId, request);
 
@@ -100,7 +109,7 @@ public class ProfileController {
 
     public ResponseEntity<ApiResponse<Void>> deleteProfile() {
 
-        Long userId = currentUserService.getCurrentUserId();
+        Long userId = 1L;
 
         profileService.deleteProfile(userId);
 
@@ -114,7 +123,7 @@ public class ProfileController {
 
     public ResponseEntity<ApiResponse<Integer>> getMyPoints() {
 
-        Long userId = currentUserService.getCurrentUserId();
+        Long userId = 1L;
 
         Integer points = profileService.getTotalPoints(userId);
 

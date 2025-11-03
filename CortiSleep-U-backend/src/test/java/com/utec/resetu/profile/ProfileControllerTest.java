@@ -28,19 +28,19 @@ class ProfileControllerTest {
 
     @Test
     void shouldGetMyProfile() throws Exception {
-        mockMvc.perform(get("/api/v1/profile/me"))
+        mockMvc.perform(get("/api/v1/profiles/me"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldCreateMyProfile() throws Exception {
         ProfileRequest request = ProfileRequest.builder()
-                .firstName("Test")
-                .lastName("User")
-                .email("test@example.com")
+                .alias("TestUser")
+                .faculty("CIENCIA_COMPUTACION")
+                .career("Ciencia de la Computación")
                 .build();
 
-        mockMvc.perform(post("/api/v1/profile/me")
+        mockMvc.perform(post("/api/v1/profiles/me")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
@@ -49,12 +49,12 @@ class ProfileControllerTest {
     @Test
     void shouldUpdateMyProfile() throws Exception {
         ProfileRequest request = ProfileRequest.builder()
-                .firstName("Updated")
-                .lastName("User")
-                .email("updated@example.com")
+                .alias("UpdatedUser")
+                .faculty("CIENCIA_COMPUTACION")
+                .career("Ciencia de la Computación")
                 .build();
 
-        mockMvc.perform(put("/api/v1/profile/me")
+        mockMvc.perform(put("/api/v1/profiles/me")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());

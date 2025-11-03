@@ -39,23 +39,23 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 
 public class UserProfile {
-
+    
     @Id
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-
+    
     @OneToOne(fetch = FetchType.LAZY)
 
     @JoinColumn(name = "user_id", nullable = false, unique = true)
 
     private User user;
-
+    
     @Column(length = 50)
 
     private String alias;
-
+    
     @Enumerated(EnumType.STRING)
 
     @Column(length = 50)
@@ -63,15 +63,15 @@ public class UserProfile {
     private Faculty faculty;
 
     private Integer semester;
-
+    
     @Column(length = 100)
 
     private String career;
-
+    
     @Column(columnDefinition = "TEXT")
 
     private String bio;
-
+    
     @Column(length = 500)
 
     private String avatarUrl;
@@ -105,11 +105,11 @@ public class UserProfile {
     @Column(nullable = false, updatable = false)
 
     private LocalDateTime createdAt;
-
+    
     @LastModifiedDate
 
     @Column(nullable = false)
 
     private LocalDateTime updatedAt;
-
+    
 }

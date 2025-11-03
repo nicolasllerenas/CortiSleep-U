@@ -17,9 +17,6 @@ public class CurrentUserService {
 
     private final UserRepository userRepository;
 
-    /**
-     * Obtiene el usuario autenticado actual desde el contexto de seguridad
-     */
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
@@ -43,30 +40,18 @@ public class CurrentUserService {
         throw new UnauthorizedException("Principal de tipo no soportado");
     }
 
-    /**
-     * Obtiene el ID del usuario autenticado actual
-     */
     public Long getCurrentUserId() {
         return getCurrentUser().getId();
     }
 
-    /**
-     * Obtiene el email del usuario autenticado actual
-     */
     public String getCurrentUserEmail() {
         return getCurrentUser().getEmail();
     }
 
-    /**
-     * Verifica si el usuario actual es el propietario del recurso
-     */
     public boolean isCurrentUser(Long userId) {
         return getCurrentUserId().equals(userId);
     }
 
-    /**
-     * Valida que el usuario actual sea el propietario, lanza excepción si no lo es
-     */
     public void validateCurrentUser(Long userId) {
         if (!isCurrentUser(userId)) {
             throw new UnauthorizedException("No tienes permisos para acceder a este recurso");

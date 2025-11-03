@@ -63,7 +63,7 @@ public class RefreshTokenService {
         log.info("Todos los tokens del usuario {} han sido revocados", userId);
     }
 
-    @Scheduled(cron = "0 0 2 * * ?") // Ejecuta diariamente a las 2 AM
+    @Scheduled(cron = "0 0 2 * * ?")
     @Transactional
     public void cleanupExpiredTokens() {
         log.info("Iniciando limpieza de tokens expirados");
