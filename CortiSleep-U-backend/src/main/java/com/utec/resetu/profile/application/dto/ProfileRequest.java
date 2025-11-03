@@ -1,39 +1,91 @@
 package com.utec.resetu.profile.application.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import jakarta.validation.constraints.*;
+
 import lombok.AllArgsConstructor;
+
 import lombok.Builder;
+
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
+import java.time.LocalDate;
+
 @Data
+
 @Builder
+
 @NoArgsConstructor
+
 @AllArgsConstructor
+
+@Schema(description = "Datos para crear/actualizar perfil")
+
 public class ProfileRequest {
-    
-    @NotBlank(message = "El nombre es requerido")
-    @Size(max = 100, message = "El nombre no puede exceder 100 caracteres")
-    private String firstName;
-    
-    @NotBlank(message = "El apellido es requerido")
-    @Size(max = 100, message = "El apellido no puede exceder 100 caracteres")
-    private String lastName;
-    
-    @Email(message = "El email debe tener un formato válido")
-    @NotBlank(message = "El email es requerido")
-    private String email;
-    
-    @Size(max = 20, message = "El teléfono no puede exceder 20 caracteres")
-    private String phone;
-    
-    private Long facultyId;
-    
-    @Size(max = 20, message = "El código de estudiante no puede exceder 20 caracteres")
-    private String studentCode;
-    
-    @Size(max = 500, message = "La biografía no puede exceder 500 caracteres")
+
+    @Size(min = 3, max = 50)
+
+    @Schema(description = "Alias del usuario", example = "TechNinja")
+
+    private String alias;
+
+    @Schema(description = "Facultad", example = "CIENCIA_COMPUTACION")
+
+    private String faculty;
+
+    @Min(1) @Max(12)
+
+    @Schema(description = "Semestre actual", example = "5")
+
+    private Integer semester;
+
+    @Size(max = 100)
+
+    @Schema(description = "Carrera", example = "Ciencia de la Computación")
+
+    private String career;
+
+    @Size(max = 500)
+
+    @Schema(description = "Biografía", example = "Estudiante apasionado por IA")
+
     private String bio;
+
+    @Schema(description = "URL del avatar")
+
+    private String avatarUrl;
+
+    @Past
+
+    @Schema(description = "Fecha de nacimiento", example = "2002-05-15")
+
+    private LocalDate birthDate;
+
+    @Min(1) @Max(10)
+
+    @Schema(description = "Nivel de estrés (1-10)", example = "6")
+
+    private Integer stressLevel;
+
+    @DecimalMin("4.0") @DecimalMax("12.0")
+
+    @Schema(description = "Horas de sueño objetivo", example = "8.0")
+
+    private BigDecimal sleepGoalHours;
+
+    @Min(60)
+
+    @Schema(description = "Límite de screen time (minutos)", example = "180")
+
+    private Integer screenTimeLimitMinutes;
+
+    @Schema(description = "Tipo de sentido preferido", example = "AUDIO")
+
+    private String preferredSenseType;
+
 }

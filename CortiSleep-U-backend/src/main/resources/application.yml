@@ -2,7 +2,7 @@ spring:
   application:
     name: reset-u
   profiles:
-    active: dev
+    active: ${SPRING_PROFILE:dev}
   
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/resetu_db}
@@ -38,13 +38,43 @@ spring:
     
   cache:
     type: simple
-    cache-names: users, profiles, pois, quests, rewards
+    cache-names: users, profiles, pois, quests, rewards, activities
+  
+  # OAuth2 Social Login Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+            scope: profile, email
+            redirect-uri: "{baseUrl}/api/v1/auth/oauth2/callback/google"
+          facebook:
+            client-id: ${FACEBOOK_APP_ID:your-facebook-app-id}
+            client-secret: ${FACEBOOK_APP_SECRET:your-facebook-app-secret}
+            scope: email, public_profile
+            redirect-uri: "{baseUrl}/api/v1/auth/oauth2/callback/facebook"
 
 # JWT Configuration
 jwt:
   secret: ${JWT_SECRET:resetU2024SecretKeyForJWTTokenGenerationMustBe256BitsLongForHS256Algorithm}
   expiration: 86400000 # 24 hours
   refresh-expiration: 604800000 # 7 days
+
+# Google Maps API (para búsqueda de POI)
+google:
+  maps:
+    api-key: ${GOOGLE_MAPS_API_KEY:}
+    default-radius-km: 5
+
+# External APIs (opcional - para contenido multimedia)
+external:
+  spotify:
+    client-id: ${SPOTIFY_CLIENT_ID:}
+    client-secret: ${SPOTIFY_CLIENT_SECRET:}
+  unsplash:
+    access-key: ${UNSPLASH_ACCESS_KEY:}
 
 # API Documentation
 springdoc:
@@ -54,37 +84,81 @@ springdoc:
     path: /api/v1/swagger-ui.html
     tags-sorter: alpha
     operations-sorter: method
+    doc-expansion: none
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+  show-actuator: false
 
 # Server Configuration
 server:
-  port: 8080
+  port: ${PORT:8080}
   servlet:
     context-path: /api/v1
   error:
     include-message: always
     include-binding-errors: always
-    include-stacktrace: never
+    include-stacktrace: on_param
     include-exception: false
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html
 
 # Logging
 logging:
   level:
     root: INFO
     com.utec.resetu: DEBUG
-    org.springframework.security: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security: INFO
+    org.hibernate.SQL: ${SQL_LOG_LEVEL:DEBUG}
+    org.hibernate.type.descriptor.sql.BasicBinder: ${SQL_PARAM_LOG_LEVEL:TRACE}
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n"
+  file:
+    name: logs/reset-u.log
+    max-size: 10MB
+    max-history: 30
 
-# Application specific
+# Application Specific
 app:
+  name: Reset U
+  version: 1.0.0
+  description: Plataforma de reducción de estrés universitario UTEC
+  
   cors:
-    allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:19006}
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:19006,http://localhost:19000}
     allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
     allowed-headers: "*"
-    exposed-headers: Authorization
+    exposed-headers: Authorization,X-Total-Count
     allow-credentials: true
     max-age: 3600
+  
+  # Configuración de gamificación
+  points:
+    checkin: 10
+    poi-visit: 25
+    focus-session: 15
+    quest-complete: 100
+    activity-complete: 20
+  
+  # Configuración de búsqueda POI
+  poi:
+    default-radius-km: 5
+    max-results: 50
+  
+  # Features flags
+  features:
+    oauth2-enabled: true
+    gamification-enabled: true
+    recommendations-enabled: true
+    push-notifications-enabled: false
+
+# Actuator (Health checks y métricas)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized

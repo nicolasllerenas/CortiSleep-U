@@ -1,29 +1,65 @@
 package com.utec.resetu.profile.application.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.AllArgsConstructor;
+
 import lombok.Builder;
+
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+
+import java.time.LocalDate;
 
 @Data
+
 @Builder
+
 @NoArgsConstructor
+
 @AllArgsConstructor
+
+@Schema(description = "Perfil completo del usuario")
+
 public class ProfileResponse {
-    
+
     private Long id;
+
     private Long userId;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
-    private Long facultyId;
-    private String facultyName;
-    private String studentCode;
-    private String profilePictureUrl;
+
+    private String userEmail;
+
+    private String fullName;
+
+    private String alias;
+
+    private String faculty;
+
+    private Integer semester;
+
+    private String career;
+
     private String bio;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    private String avatarUrl;
+
+    private LocalDate birthDate;
+
+    private Integer age;
+
+    private Integer totalPoints;
+
+    private Integer stressLevel;
+
+    private BigDecimal sleepGoalHours;
+
+    private Integer screenTimeLimitMinutes;
+
+    private String preferredSenseType;
+
+    private String createdAt;
+
 }
