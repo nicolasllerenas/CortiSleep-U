@@ -317,12 +317,12 @@ CREATE INDEX idx_sensory_prefs_content_id ON user_sensory_preferences(content_id
 -- TRIGGER FOR UPDATED_AT TIMESTAMP
 -- ========================================
 CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $
+RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = CURRENT_TIMESTAMP;
     RETURN NEW;
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
