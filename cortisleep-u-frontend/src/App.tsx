@@ -1,61 +1,82 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import LoginForm from './components/LoginForm'
+import RegisterForm from './components/RegisterForm'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import ProfilePage from './pages/ProfilePage'
+import CheckinsPage from './pages/CheckinsPage'
 
-function App() {
-  const [count, setCount] = useState(0);
+function AppInner() {
+  const [view, setView] = useState<'home' | 'login' | 'register' | 'profile' | 'checkins'>('home')
+  const { isAuthenticated, logout } = useAuth()
+
+  function handleLoginSuccess() {
+    setView('home')
+  }
+
+  function handleLogout() {
+    logout()
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-      <div className="text-center space-y-8 p-8 bg-white rounded-2xl shadow-xl max-w-md">
-        <div className="flex justify-center space-x-8">
-          <a
-            href="https://vite.dev"
-            target="_blank"
-            className="hover:scale-110 transition-transform"
-          >
-            <img src={viteLogo} className="h-16 w-16" alt="Vite logo" />
-          </a>
-          <a
-            href="https://react.dev"
-            target="_blank"
-            className="hover:scale-110 transition-transform"
-          >
-            <img
-              src={reactLogo}
-              className="h-16 w-16 animate-spin-slow"
-              alt="React logo"
-            />
-          </a>
+    <div className="min-h-screen flex items-center justify-center bg-white">
+  <div className="text-center space-y-6 p-8 block-option rounded-2xl shadow-xl max-w-md w-full">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <img src={viteLogo} className="h-10 w-10" alt="Vite logo" />
+            <img src={reactLogo} className="h-10 w-10" alt="React logo" />
+            <h1 className="text-2xl font-semibold text-gray-800">Reset U</h1>
+          </div>
+
+          <div className="space-x-2">
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-500 text-white rounded-md"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <button onClick={() => setView('login')} className="px-4 py-2 btn-primary rounded-md">
+                  Login
+                </button>
+                <button onClick={() => setView('register')} className="px-4 py-2 btn-primary rounded-md">
+                  Register
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
-        <h1 className="text-4xl font-bold text-gray-800 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          CortiSleep-U
-        </h1>
+        <div className="mt-4">
+          {view === 'home' && (
+            <div className="space-y-4">
+              <p className="text-gray-600">Bienvenido a Reset U. Usa Login o Register para continuar.</p>
+            </div>
+          )}
 
-        <div className="space-y-4">
-          <button
-            onClick={() => setCount((count) => count + 1)}
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
-          >
-            Contador: {count}
-          </button>
+          {view === 'profile' && <ProfilePage />}
+          {view === 'checkins' && <CheckinsPage />}
 
-          <p className="text-gray-600">
-            Edita{" "}
-            <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono">
-              src/App.tsx
-            </code>{" "}
-            y guarda para probar HMR
-          </p>
+          {view === 'login' && (
+            <LoginForm onSuccess={() => handleLoginSuccess()} onCancel={() => setView('home')} />
+          )}
+
+          {view === 'register' && (
+            <RegisterForm onSuccess={() => handleLoginSuccess()} onCancel={() => setView('home')} />
+          )}
         </div>
-
-        <p className="text-sm text-gray-500">
-          Haz clic en los logos de Vite y React para aprender más
-        </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
+  )
+}
