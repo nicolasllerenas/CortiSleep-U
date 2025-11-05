@@ -1,5 +1,7 @@
 package com.utec.resetu.auth.application.dto;
 
+import java.time.LocalDateTime;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +32,10 @@ public class UserDto {
 
     @Schema(description = "Estado de verificación de email", example = "false")
     private Boolean emailVerified;
+
+    @Schema(description = "Fecha de creación del usuario", example = "2024-01-01T12:00:00Z")
+    private LocalDateTime createdAt;
+
+    @Schema(description = "Fecha de última actualización del usuario", example = "2024-01-02T12:00:00Z")
+    private LocalDateTime updatedAt;
 }
