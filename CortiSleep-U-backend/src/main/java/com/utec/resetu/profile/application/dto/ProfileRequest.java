@@ -16,17 +16,18 @@ import java.math.BigDecimal;
 
 import java.time.LocalDate;
 
-@Data
 
-@Builder
 
-@NoArgsConstructor
 
-@AllArgsConstructor
 
 @Schema(description = "Datos para crear/actualizar perfil")
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProfileRequest {
+    
 
     @Size(min = 3, max = 50)
 

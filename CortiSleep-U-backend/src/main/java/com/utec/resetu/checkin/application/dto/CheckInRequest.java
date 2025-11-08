@@ -8,11 +8,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import lombok.Data;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckInRequest {
+    
     
     @Size(max = 200, message = "El nombre de la ubicación no puede exceder 200 caracteres")
     private String locationName;

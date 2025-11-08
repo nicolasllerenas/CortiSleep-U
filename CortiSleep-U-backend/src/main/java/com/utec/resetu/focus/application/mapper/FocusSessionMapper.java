@@ -10,25 +10,25 @@ public class FocusSessionMapper {
 
     public FocusSession toEntity(FocusSessionRequest request) {
         if (request == null) return null;
-        return FocusSession.builder()
-                .durationMinutes(request.getDurationMinutes())
-                .sessionType(request.getSessionType())
-                .taskDescription(request.getTaskDescription())
-                .build();
+        FocusSession fs = new FocusSession();
+        fs.setDurationMinutes(request.getDurationMinutes());
+        fs.setSessionType(request.getSessionType());
+        fs.setTaskDescription(request.getTaskDescription());
+        return fs;
     }
 
     public FocusSessionResponse toDto(FocusSession session) {
         if (session == null) return null;
-        return FocusSessionResponse.builder()
-                .id(session.getId())
-                .userId(session.getUser() != null ? session.getUser().getId() : null)
-                .durationMinutes(session.getDurationMinutes())
-                .completed(session.getCompleted())
-                .startedAt(session.getStartedAt())
-                .endedAt(session.getEndedAt())
-                .sessionType(session.getSessionType())
-                .taskDescription(session.getTaskDescription())
-                .createdAt(session.getCreatedAt() != null ? session.getCreatedAt().toString() : null)
-                .build();
+        FocusSessionResponse r = new FocusSessionResponse();
+        r.setId(session.getId());
+        r.setUserId(session.getUser() != null ? session.getUser().getId() : null);
+        r.setDurationMinutes(session.getDurationMinutes());
+        r.setCompleted(session.getCompleted());
+        r.setStartedAt(session.getStartedAt());
+        r.setEndedAt(session.getEndedAt());
+        r.setSessionType(session.getSessionType());
+        r.setTaskDescription(session.getTaskDescription());
+        r.setCreatedAt(session.getCreatedAt() != null ? session.getCreatedAt().toString() : null);
+        return r;
     }
 }

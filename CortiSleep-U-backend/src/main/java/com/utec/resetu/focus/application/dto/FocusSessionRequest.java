@@ -12,15 +12,16 @@ import lombok.Data;
 
 import lombok.NoArgsConstructor;
 
+
+
+
+
 @Data
-
-@Builder
-
-@NoArgsConstructor
-
-@AllArgsConstructor
-
 public class FocusSessionRequest {
+    public FocusSessionRequest() {}
+    public FocusSessionRequest(Integer durationMinutes, String sessionType, String taskDescription) {
+        this.durationMinutes = durationMinutes; this.sessionType = sessionType; this.taskDescription = taskDescription;
+    }
 
     @NotNull
 

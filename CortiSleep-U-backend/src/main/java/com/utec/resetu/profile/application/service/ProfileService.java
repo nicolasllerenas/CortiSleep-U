@@ -16,10 +16,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class ProfileService {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProfileService.class);
+    public ProfileService(UserProfileRepository profileRepository, UserRepository userRepository, ProfileMapper profileMapper) {
+        this.profileRepository = profileRepository;
+        this.userRepository = userRepository;
+        this.profileMapper = profileMapper;
+    }
 
     private final UserProfileRepository profileRepository;
     private final UserRepository userRepository;

@@ -18,13 +18,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Data
-
-@Builder
-
-@NoArgsConstructor
-
-@AllArgsConstructor
 
 @Entity
 
@@ -32,7 +25,12 @@ import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 
+@Data
 public class FocusSession {
+    public FocusSession() {}
+    public FocusSession(Long id, com.utec.resetu.auth.domain.model.User user, Integer durationMinutes, Boolean completed, java.time.LocalDateTime startedAt, java.time.LocalDateTime endedAt, String sessionType, String taskDescription, java.time.LocalDateTime createdAt) {
+        this.id=id; this.user=user; this.durationMinutes=durationMinutes; this.completed=completed; this.startedAt=startedAt; this.endedAt=endedAt; this.sessionType=sessionType; this.taskDescription=taskDescription; this.createdAt=createdAt;
+    }
 
     @Id
 
@@ -52,8 +50,6 @@ public class FocusSession {
 
     @Column(nullable = false)
 
-    @Builder.Default
-
     private Boolean completed = false;
 
     @Column(nullable = false)
@@ -63,8 +59,6 @@ public class FocusSession {
     private LocalDateTime endedAt;
 
     @Column(length = 20, nullable = false)
-
-    @Builder.Default
 
     private String sessionType = "POMODORO";
 

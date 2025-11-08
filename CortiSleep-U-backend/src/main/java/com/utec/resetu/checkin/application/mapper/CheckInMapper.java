@@ -10,32 +10,32 @@ public class CheckInMapper {
 
     public CheckIn toEntity(CheckInRequest request) {
         if (request == null) return null;
-        return CheckIn.builder()
-                .locationName(request.getLocationName())
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
-                .moodScore(request.getMoodScore())
-                .stressLevel(request.getStressLevel())
-                .energyLevel(request.getEnergyLevel())
-                .notes(request.getNotes())
-                .build();
+        CheckIn ci = new CheckIn();
+        ci.setLocationName(request.getLocationName());
+        ci.setLatitude(request.getLatitude());
+        ci.setLongitude(request.getLongitude());
+        ci.setMoodScore(request.getMoodScore());
+        ci.setStressLevel(request.getStressLevel());
+        ci.setEnergyLevel(request.getEnergyLevel());
+        ci.setNotes(request.getNotes());
+        return ci;
     }
 
     public CheckInResponse toResponse(CheckIn checkIn) {
         if (checkIn == null) return null;
-        return CheckInResponse.builder()
-                .id(checkIn.getId())
-                .userId(checkIn.getUserId())
-                .locationName(checkIn.getLocationName())
-                .latitude(checkIn.getLatitude())
-                .longitude(checkIn.getLongitude())
-                .moodScore(checkIn.getMoodScore())
-                .stressLevel(checkIn.getStressLevel())
-                .energyLevel(checkIn.getEnergyLevel())
-                .notes(checkIn.getNotes())
-                .checkInTime(checkIn.getCheckInTime())
-                .createdAt(checkIn.getCreatedAt())
-                .updatedAt(checkIn.getUpdatedAt())
-                .build();
+        CheckInResponse r = new CheckInResponse();
+        r.setId(checkIn.getId());
+        r.setUserId(checkIn.getUserId());
+        r.setLocationName(checkIn.getLocationName());
+        r.setLatitude(checkIn.getLatitude());
+        r.setLongitude(checkIn.getLongitude());
+        r.setMoodScore(checkIn.getMoodScore());
+        r.setStressLevel(checkIn.getStressLevel());
+        r.setEnergyLevel(checkIn.getEnergyLevel());
+        r.setNotes(checkIn.getNotes());
+        r.setCheckInTime(checkIn.getCheckInTime());
+        r.setCreatedAt(checkIn.getCreatedAt());
+        r.setUpdatedAt(checkIn.getUpdatedAt());
+        return r;
     }
 }

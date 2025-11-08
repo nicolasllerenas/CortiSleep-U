@@ -24,13 +24,6 @@ import java.time.LocalDate;
 
 import java.time.LocalDateTime;
 
-@Data
-
-@Builder
-
-@NoArgsConstructor
-
-@AllArgsConstructor
 
 @Entity
 
@@ -38,7 +31,12 @@ import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 
+@Data
 public class UserProfile {
+    public UserProfile() {}
+    public UserProfile(Long id, com.utec.resetu.auth.domain.model.User user, String alias, Faculty faculty, Integer semester, String career, String bio, String avatarUrl, java.time.LocalDate birthDate, Integer totalPoints, Integer stressLevel, java.math.BigDecimal sleepGoalHours, Integer screenTimeLimitMinutes, String preferredSenseType, java.time.LocalDateTime createdAt, java.time.LocalDateTime updatedAt) {
+        this.id=id; this.user=user; this.alias=alias; this.faculty=faculty; this.semester=semester; this.career=career; this.bio=bio; this.avatarUrl=avatarUrl; this.birthDate=birthDate; this.totalPoints=totalPoints; this.stressLevel=stressLevel; this.sleepGoalHours=sleepGoalHours; this.screenTimeLimitMinutes=screenTimeLimitMinutes; this.preferredSenseType=preferredSenseType; this.createdAt=createdAt; this.updatedAt=updatedAt;
+    }
     
     @Id
 
@@ -80,19 +78,13 @@ public class UserProfile {
 
     @Column(nullable = false)
 
-    @Builder.Default
-
     private Integer totalPoints = 0;
 
     private Integer stressLevel;
 
     @Column(precision = 3, scale = 1)
 
-    @Builder.Default
-
     private BigDecimal sleepGoalHours = new BigDecimal("8.0");
-
-    @Builder.Default
 
     private Integer screenTimeLimitMinutes = 180;
 

@@ -14,43 +14,43 @@ public class ProfileMapper {
 
     public UserProfile toEntity(ProfileRequest request) {
         if (request == null) return null;
-        UserProfile.UserProfileBuilder builder = UserProfile.builder()
-                .alias(request.getAlias())
-                .faculty(stringToFaculty(request.getFaculty()))
-                .semester(request.getSemester())
-                .career(request.getCareer())
-                .bio(request.getBio())
-                .avatarUrl(request.getAvatarUrl())
-                .birthDate(request.getBirthDate())
-                .stressLevel(request.getStressLevel())
-                .sleepGoalHours(request.getSleepGoalHours())
-                .screenTimeLimitMinutes(request.getScreenTimeLimitMinutes())
-                .preferredSenseType(request.getPreferredSenseType());
-        return builder.build();
+        UserProfile p = new UserProfile();
+        p.setAlias(request.getAlias());
+        p.setFaculty(stringToFaculty(request.getFaculty()));
+        p.setSemester(request.getSemester());
+        p.setCareer(request.getCareer());
+        p.setBio(request.getBio());
+        p.setAvatarUrl(request.getAvatarUrl());
+        p.setBirthDate(request.getBirthDate());
+        p.setStressLevel(request.getStressLevel());
+        p.setSleepGoalHours(request.getSleepGoalHours());
+        p.setScreenTimeLimitMinutes(request.getScreenTimeLimitMinutes());
+        p.setPreferredSenseType(request.getPreferredSenseType());
+        return p;
     }
 
     public ProfileResponse toDto(UserProfile profile) {
         if (profile == null) return null;
-        return ProfileResponse.builder()
-                .id(profile.getId())
-                .userId(profile.getUser() != null ? profile.getUser().getId() : null)
-                .userEmail(profile.getUser() != null ? profile.getUser().getEmail() : null)
-                .fullName(profile.getUser() != null ? profile.getUser().getFullName() : null)
-                .alias(profile.getAlias())
-                .faculty(facultyToString(profile.getFaculty()))
-                .semester(profile.getSemester())
-                .career(profile.getCareer())
-                .bio(profile.getBio())
-                .avatarUrl(profile.getAvatarUrl())
-                .birthDate(profile.getBirthDate())
-                .age(calculateAge(profile.getBirthDate()))
-                .totalPoints(profile.getTotalPoints())
-                .stressLevel(profile.getStressLevel())
-                .sleepGoalHours(profile.getSleepGoalHours())
-                .screenTimeLimitMinutes(profile.getScreenTimeLimitMinutes())
-                .preferredSenseType(profile.getPreferredSenseType())
-                .createdAt(profile.getCreatedAt() != null ? profile.getCreatedAt().toString() : null)
-                .build();
+        ProfileResponse r = new ProfileResponse();
+        r.setId(profile.getId());
+        r.setUserId(profile.getUser() != null ? profile.getUser().getId() : null);
+        r.setUserEmail(profile.getUser() != null ? profile.getUser().getEmail() : null);
+        r.setFullName(profile.getUser() != null ? profile.getUser().getFullName() : null);
+        r.setAlias(profile.getAlias());
+        r.setFaculty(facultyToString(profile.getFaculty()));
+        r.setSemester(profile.getSemester());
+        r.setCareer(profile.getCareer());
+        r.setBio(profile.getBio());
+        r.setAvatarUrl(profile.getAvatarUrl());
+        r.setBirthDate(profile.getBirthDate());
+        r.setAge(calculateAge(profile.getBirthDate()));
+        r.setTotalPoints(profile.getTotalPoints());
+        r.setStressLevel(profile.getStressLevel());
+        r.setSleepGoalHours(profile.getSleepGoalHours());
+        r.setScreenTimeLimitMinutes(profile.getScreenTimeLimitMinutes());
+        r.setPreferredSenseType(profile.getPreferredSenseType());
+        r.setCreatedAt(profile.getCreatedAt() != null ? profile.getCreatedAt().toString() : null);
+        return r;
     }
 
     public void updateEntityFromDto(ProfileRequest request, UserProfile profile) {

@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,10 +22,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/checkins")
-@RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Check-Ins", description = "Registro diario de estrés, sueño y bienestar")
 public class CheckInController {
+
+    public CheckInController(CheckInService checkInService) {
+        this.checkInService = checkInService;
+    }
 
     private final CheckInService checkInService;
     // CurrentUserService temporalmente omitido para resolver import; usar SecurityContext en una iteración posterior

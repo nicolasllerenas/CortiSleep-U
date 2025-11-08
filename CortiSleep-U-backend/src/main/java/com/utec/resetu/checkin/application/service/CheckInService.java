@@ -61,13 +61,8 @@ public class CheckInService {
                 .map(checkInMapper::toResponse)
                 .collect(Collectors.toList());
         
-        return PageResponse.<CheckInResponse>builder()
-                .content(responses)
-                .totalElements(checkIns.getTotalElements())
-                .totalPages(checkIns.getTotalPages())
-                .size(checkIns.getSize())
-                .totalElements(checkIns.getTotalElements())
-                .build();
+        Page<CheckInResponse> dtoPage = checkIns.map(checkInMapper::toResponse);
+        return PageResponse.from(dtoPage);
     }
 
     public Page<CheckInResponse> getCheckInsByUser(Long userId, Pageable pageable) {
@@ -102,18 +97,18 @@ public class CheckInService {
         
         LocalDateTime lastCheckIn = allCheckIns.isEmpty() ? null : allCheckIns.get(0).getCheckInTime();
         
-        return CheckInStatsDto.builder()
-                .userId(userId)
-                .totalCheckIns((long) allCheckIns.size())
-                .averageMoodScore(averageMoodScore)
-                .averageStressLevel(averageStressLevel)
-                .averageEnergyLevel(null) // TODO: Implementar cálculo
-                .checkInsToday(checkInsToday)
-                .checkInsThisWeek(checkInsThisWeek)
-                .checkInsThisMonth(checkInsThisMonth)
-                .recentCheckIns(recentCheckIns)
-                .lastCheckIn(lastCheckIn)
-                .build();
+        CheckInStatsDto dto = new CheckInStatsDto();
+        dto.setUserId(userId);
+        dto.setTotalCheckIns((long) allCheckIns.size());
+        dto.setAverageMoodScore(averageMoodScore);
+        dto.setAverageStressLevel(averageStressLevel);
+        dto.setAverageEnergyLevel(null);
+        dto.setCheckInsToday(checkInsToday);
+        dto.setCheckInsThisWeek(checkInsThisWeek);
+        dto.setCheckInsThisMonth(checkInsThisMonth);
+        dto.setRecentCheckIns(recentCheckIns);
+        dto.setLastCheckIn(lastCheckIn);
+        return dto;
     }
 
     public CheckInStatsDto getStats(Long userId, LocalDate start, LocalDate end) {

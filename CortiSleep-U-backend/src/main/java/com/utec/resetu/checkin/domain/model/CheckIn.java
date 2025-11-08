@@ -10,10 +10,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "check_ins")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class CheckIn {
     
     @Id
@@ -53,6 +49,25 @@ public class CheckIn {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
+    public CheckIn() {}
+    
+    public CheckIn(Long id, Long userId, String locationName, Double latitude, Double longitude,
+                   Integer moodScore, Integer stressLevel, Integer energyLevel, String notes,
+                   LocalDateTime checkInTime, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.userId = userId;
+        this.locationName = locationName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.moodScore = moodScore;
+        this.stressLevel = stressLevel;
+        this.energyLevel = energyLevel;
+        this.notes = notes;
+        this.checkInTime = checkInTime;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+    
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -66,4 +81,29 @@ public class CheckIn {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    public String getLocationName() { return locationName; }
+    public void setLocationName(String locationName) { this.locationName = locationName; }
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
+    public Integer getMoodScore() { return moodScore; }
+    public void setMoodScore(Integer moodScore) { this.moodScore = moodScore; }
+    public Integer getStressLevel() { return stressLevel; }
+    public void setStressLevel(Integer stressLevel) { this.stressLevel = stressLevel; }
+    public Integer getEnergyLevel() { return energyLevel; }
+    public void setEnergyLevel(Integer energyLevel) { this.energyLevel = energyLevel; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+    public LocalDateTime getCheckInTime() { return checkInTime; }
+    public void setCheckInTime(LocalDateTime checkInTime) { this.checkInTime = checkInTime; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

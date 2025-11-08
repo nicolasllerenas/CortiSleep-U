@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckInStatsDto {
-    
     private Long userId;
     private Long totalCheckIns;
     private Double averageMoodScore;

@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import lombok.Data;
+
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class CheckInResponse {
+    public CheckInResponse() {}
+    public CheckInResponse(Long id, Long userId, String locationName, Double latitude, Double longitude, Integer moodScore, Integer stressLevel, Integer energyLevel, String notes, java.time.LocalDateTime checkInTime, java.time.LocalDateTime createdAt, java.time.LocalDateTime updatedAt) {
+        this.id = id; this.userId = userId; this.locationName = locationName; this.latitude = latitude; this.longitude = longitude; this.moodScore = moodScore; this.stressLevel = stressLevel; this.energyLevel = energyLevel; this.notes = notes; this.checkInTime = checkInTime; this.createdAt = createdAt; this.updatedAt = updatedAt;
+    }
     
     private Long id;
     private Long userId;

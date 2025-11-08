@@ -10,10 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class CurrentUserService {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CurrentUserService.class);
+    public CurrentUserService(UserRepository userRepository) { this.userRepository = userRepository; }
 
     private final UserRepository userRepository;
 

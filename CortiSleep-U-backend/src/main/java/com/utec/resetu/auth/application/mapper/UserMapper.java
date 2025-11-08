@@ -10,13 +10,13 @@ public class UserMapper {
 
     public User toEntity(RegisterRequest request) {
         if (request == null) return null;
-        return User.builder()
-                .email(request.getEmail())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .isActive(true)
-                .emailVerified(false)
-                .build();
+        User u = new User();
+        u.setEmail(request.getEmail());
+        u.setFirstName(request.getFirstName());
+        u.setLastName(request.getLastName());
+        u.setIsActive(true);
+        u.setEmailVerified(false);
+        return u;
     }
 
     public UserDto toDto(User user) {

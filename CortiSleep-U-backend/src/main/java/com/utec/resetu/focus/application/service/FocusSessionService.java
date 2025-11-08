@@ -19,10 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class FocusSessionService {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FocusSessionService.class);
+    public FocusSessionService(FocusSessionRepository sessionRepository, UserRepository userRepository, FocusSessionMapper sessionMapper, ProfileService profileService) {
+        this.sessionRepository = sessionRepository;
+        this.userRepository = userRepository;
+        this.sessionMapper = sessionMapper;
+        this.profileService = profileService;
+    }
 
     private final FocusSessionRepository sessionRepository;
     private final UserRepository userRepository;
@@ -89,12 +94,12 @@ public class FocusSessionService {
 
         double completionRate = totalSessions > 0 ? 100.0 : 0.0;
 
-        return FocusStatsDto.builder()
-                .totalSessions(totalSessions)
-                .completedSessions(totalSessions)
-                .totalMinutes(totalMinutes != null ? totalMinutes : 0L)
-                .last7DaysSessions(last7Days)
-                .completionRate(completionRate)
-                .build();
+        FocusStatsDto dto = new FocusStatsDto();
+        dto.setTotalSessions(totalSessions);
+        dto.setCompletedSessions(totalSessions);
+        dto.setTotalMinutes(totalMinutes != null ? totalMinutes : 0L);
+        dto.setLast7DaysSessions(last7Days);
+        dto.setCompletionRate(completionRate);
+        return dto;
     }
 }
