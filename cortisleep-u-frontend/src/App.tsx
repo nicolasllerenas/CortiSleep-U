@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import appLogo from './assets/Reset-U_logo.svg'
+import appTextLogo from './assets/Reset-U_text_logo.svg'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
@@ -24,9 +24,8 @@ function AppInner() {
   <div className="text-center space-y-6 p-8 block-option rounded-2xl shadow-xl max-w-md w-full">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <img src={viteLogo} className="h-10 w-10" alt="Vite logo" />
-            <img src={reactLogo} className="h-10 w-10" alt="React logo" />
-            <h1 className="text-2xl font-semibold text-gray-800">Reset U</h1>
+            <img src={appLogo} className="h-8 w-8 object-contain" style={{ maxWidth: 40, maxHeight: 40 }} alt="Reset U logo" />
+            <img src={appTextLogo} className="h-8 w-auto object-contain" style={{ maxHeight: 40 }} alt="Reset U text logo" />
           </div>
 
           <div className="space-x-2">
