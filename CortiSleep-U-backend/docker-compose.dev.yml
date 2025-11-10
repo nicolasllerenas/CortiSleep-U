@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: resetu-db
+    environment:
+      POSTGRES_USER: resetu_user
+      POSTGRES_PASSWORD: resetu_pass
+      POSTGRES_DB: resetu_db_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resetu_user -d resetu_db_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  db_data:

@@ -17,8 +17,8 @@ import org.springframework.context.annotation.Configuration;
                 version = "1.0.0",
                 description = "API REST para la aplicación Reset U - Reducción de estrés universitario",
                 contact = @Contact(
-                        name = "UTEC Team",
-                        email = "team@resetu.com"
+                        name = "Reset U Team",
+                        email = "nicolas.llerena@utec.edu.pe"
                 ),
                 license = @License(
                         name = "MIT License",

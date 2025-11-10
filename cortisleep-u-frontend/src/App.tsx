@@ -17,6 +17,7 @@ function AppInner() {
 
   function handleLogout() {
     logout()
+    setView('home')
   }
 
   return (
@@ -49,27 +50,66 @@ function AppInner() {
           </div>
         </div>
 
-        <div className="mt-4">
-          {view === 'home' && (
-            <div className="space-y-4">
-              <p className="text-gray-600">Bienvenido a Reset U. Usa Login o Register para continuar.</p>
-            </div>
-          )}
+       {/* Quick nav for authenticated users */}
+       {isAuthenticated && (
+         <div className="grid grid-cols-2 gap-3">
+           <button onClick={() => setView('profile')} className={`px-4 py-3 rounded-lg border text-sm ${view==='profile' ? 'bg-white' : 'bg-gray-50'}`}>
+             Perfil
+           </button>
+           <button onClick={() => setView('checkins')} className={`px-4 py-3 rounded-lg border text-sm ${view==='checkins' ? 'bg-white' : 'bg-gray-50'}`}>
+             Check-ins
+           </button>
+         </div>
+       )}
 
-          {view === 'profile' && <ProfilePage />}
-          {view === 'checkins' && <CheckinsPage />}
+       <div className="mt-4 text-left">
+         {view === 'home' && (
+           <div className="space-y-4">
+             <p className="text-gray-700 text-sm sm:text-base">Bienvenido a Reset U. Usa Login o Register para continuar.</p>
+             {isAuthenticated && (
+               <p className="text-gray-600 text-sm">Puedes gestionar tu perfil o registrar check-ins.</p>
+             )}
+           </div>
+         )}
 
-          {view === 'login' && (
-            <LoginForm onSuccess={() => handleLoginSuccess()} onCancel={() => setView('home')} />
-          )}
+         {/* Protected views if not authenticated */}
+         {!isAuthenticated && (view === 'profile' || view === 'checkins') ? (
+           <div className="space-y-3">
+             <p className="text-gray-700">Debes iniciar sesión para acceder a esta sección.</p>
+             <div className="flex gap-2">
+               <button onClick={() => setView('login')} className="px-4 py-2 btn-primary rounded-md">Login</button>
+               <button onClick={() => setView('register')} className="px-4 py-2 btn-primary rounded-md">Registrar</button>
+             </div>
+           </div>
+         ) : (
+           <>
+             {view === 'profile' && <ProfilePage />}
+             {view === 'checkins' && <CheckinsPage />}
 
-          {view === 'register' && (
-            <RegisterForm onSuccess={() => handleLoginSuccess()} onCancel={() => setView('home')} />
-          )}
-        </div>
-      </div>
-    </div>
-  )
+             {view === 'login' && (
+               <LoginForm onSuccess={() => handleLoginSuccess()} onCancel={() => setView('home')} />
+             )}
+
+             {view === 'register' && (
+               <RegisterForm onSuccess={() => handleLoginSuccess()} onCancel={() => setView('home')} />
+             )}
+           </>
+         )}
+       </div>
+
+       {/* Bottom nav for mobile */}
+       {isAuthenticated && (
+         <div className="sm:hidden fixed bottom-4 left-0 right-0 mx-auto max-w-md px-4">
+           <div className="bg-white/90 backdrop-blur border rounded-xl shadow-md flex justify-around py-2">
+             <button onClick={() => setView('profile')} className={`px-3 py-2 text-sm ${view==='profile' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Perfil</button>
+             <button onClick={() => setView('checkins')} className={`px-3 py-2 text-sm ${view==='checkins' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Check-ins</button>
+             <button onClick={() => setView('home')} className={`px-3 py-2 text-sm ${view==='home' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Inicio</button>
+           </div>
+         </div>
+       )}
+     </div>
+   </div>
+ )
 }
 
 export default function App() {
