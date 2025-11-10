@@ -20,19 +20,10 @@ public class ApiResponse<T> {
     private LocalDateTime timestamp;
 
     public static <T> ApiResponse<T> success(String message, T data) {
-        ApiResponse<T> r = new ApiResponse<>();
-        r.setSuccess(true);
-        r.setMessage(message);
-        r.setData(data);
-        r.setTimestamp(LocalDateTime.now());
-        return r;
+        return new ApiResponse<>(true, message, data, LocalDateTime.now());
     }
 
     public static <T> ApiResponse<T> error(String message) {
-        ApiResponse<T> r = new ApiResponse<>();
-        r.setSuccess(false);
-        r.setMessage(message);
-        r.setTimestamp(LocalDateTime.now());
-        return r;
+        return new ApiResponse<>(false, message, null, LocalDateTime.now());
     }
 }

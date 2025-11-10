@@ -97,18 +97,18 @@ public class CheckInService {
         
         LocalDateTime lastCheckIn = allCheckIns.isEmpty() ? null : allCheckIns.get(0).getCheckInTime();
         
-        CheckInStatsDto dto = new CheckInStatsDto();
-        dto.setUserId(userId);
-        dto.setTotalCheckIns((long) allCheckIns.size());
-        dto.setAverageMoodScore(averageMoodScore);
-        dto.setAverageStressLevel(averageStressLevel);
-        dto.setAverageEnergyLevel(null);
-        dto.setCheckInsToday(checkInsToday);
-        dto.setCheckInsThisWeek(checkInsThisWeek);
-        dto.setCheckInsThisMonth(checkInsThisMonth);
-        dto.setRecentCheckIns(recentCheckIns);
-        dto.setLastCheckIn(lastCheckIn);
-        return dto;
+        return CheckInStatsDto.builder()
+                .userId(userId)
+                .totalCheckIns((long) allCheckIns.size())
+                .averageMoodScore(averageMoodScore)
+                .averageStressLevel(averageStressLevel)
+                .averageEnergyLevel(null)
+                .checkInsToday(checkInsToday)
+                .checkInsThisWeek(checkInsThisWeek)
+                .checkInsThisMonth(checkInsThisMonth)
+                .recentCheckIns(recentCheckIns)
+                .lastCheckIn(lastCheckIn)
+                .build();
     }
 
     public CheckInStatsDto getStats(Long userId, LocalDate start, LocalDate end) {

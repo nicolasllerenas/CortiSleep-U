@@ -37,14 +37,12 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 
 @Tag(name = "Sensory Content", description = "Contenido multimedia para los 5 sentidos")
-
 public class SensoryContentController {
 
     private final SensoryContentRepository contentRepository;
-
-    private final UserSensoryPreferenceRepository preferenceRepository;
-
-    private final CurrentUserService currentUserService;
+   private final UserSensoryPreferenceRepository preferenceRepository;
+   private final CurrentUserService currentUserService;
+   private final com.utec.resetu.senses.application.service.SensesService sensesService;
 
     @GetMapping("/content")
 
@@ -84,5 +82,35 @@ public class SensoryContentController {
 
     }
 
+   @PostMapping("/content/{id}/view")
+   @Operation(summary = "Incrementar vistas del contenido")
+   public ResponseEntity<ApiResponse<Void>> incrementView(@PathVariable Long id) {
+       sensesService.incrementView(id);
+       return ResponseEntity.ok(ApiResponse.success("Vista registrada", null));
+   }
+
+   @PutMapping("/content/{id}/favorite")
+   @Operation(summary = "Marcar/desmarcar favorito")
+   public ResponseEntity<ApiResponse<Boolean>> toggleFavorite(@PathVariable Long id) {
+       boolean fav = sensesService.toggleFavorite(id);
+       return ResponseEntity.ok(ApiResponse.success("Estado de favorito actualizado", fav));
+   }
+
+   @PutMapping("/content/{id}/play")
+   @Operation(summary = "Registrar reproducción")
+   public ResponseEntity<ApiResponse<Void>> registerPlay(@PathVariable Long id) {
+       sensesService.registerPlay(id);
+       return ResponseEntity.ok(ApiResponse.success("Reproducción registrada", null));
+   }
+
+   @GetMapping("/recommended")
+   @Operation(summary = "Contenido recomendado")
+   public ResponseEntity<ApiResponse<java.util.List<SensoryContent>>> recommended(
+           @RequestParam(required = false) SenseType type,
+           @RequestParam(required = false) Integer stress
+   ) {
+       var list = sensesService.recommended(type, stress);
+       return ResponseEntity.ok(ApiResponse.success("Recomendaciones", list));
+   }
 }
 
