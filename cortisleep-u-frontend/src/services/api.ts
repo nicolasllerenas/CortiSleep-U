@@ -74,7 +74,7 @@ async function refreshAccessToken(): Promise<boolean> {
   return refreshing
 }
 
-async function request<T>(
+async function request<T = any>(
   path: string,
   options: RequestInit = {},
   attempt = 0
@@ -114,19 +114,19 @@ async function request<T>(
   return isJson ? JSON.parse(text) as T : (text as unknown as T)
 }
 
-export async function apiGet<T>(path: string) {
+export async function apiGet<T = any>(path: string): Promise<T> {
   return request<T>(path, { method: 'GET' })
 }
 
-export async function apiPost<T>(path: string, body?: any) {
+export async function apiPost<T = any>(path: string, body?: any): Promise<T> {
   return request<T>(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined })
 }
 
-export async function apiPut<T>(path: string, body?: any) {
+export async function apiPut<T = any>(path: string, body?: any): Promise<T> {
   return request<T>(path, { method: 'PUT', body: body ? JSON.stringify(body) : undefined })
 }
 
-export async function apiDelete<T>(path: string) {
+export async function apiDelete<T = any>(path: string): Promise<T> {
   return request<T>(path, { method: 'DELETE' })
 }
 
