@@ -9,9 +9,17 @@ export default function RewardsPage() {
     useEffect(() => {
         setLoading(true)
         poiService.listRewards()
-            .then((res) => {
-                setRewards(res)
-            })
+                .then((res) => {
+                    const payload = (res as any)
+                    if (Array.isArray(payload)) setRewards(payload)
+                    else if (Array.isArray(payload?.data)) setRewards(payload.data)
+                    else {
+                        // unexpected shape, coerce to empty list and warn
+                        // eslint-disable-next-line no-console
+                        console.warn('Rewards: unexpected response', payload)
+                        setRewards([])
+                    }
+                })
             .catch((err) => setError(String(err?.body?.message || err?.message || err)))
             .finally(() => setLoading(false))
     }, [])

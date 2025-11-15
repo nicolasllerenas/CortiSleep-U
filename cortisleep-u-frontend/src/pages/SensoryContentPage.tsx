@@ -12,8 +12,23 @@ export default function SensoryContentPage() {
     setLoading(true)
     Promise.all([sensesService.listSenses(), sensesService.getMyFavorites()])
       .then(([list, favs]) => {
-        setItems(list || [])
-        setFavorites(favs || [])
+        // Defensive: only set arrays. If the response is wrapped or a string
+        // (e.g. index.html served), coerce to empty array and warn.
+        if (Array.isArray(list)) setItems(list)
+        else if (Array.isArray((list as any)?.data)) setItems((list as any).data)
+        else {
+          // eslint-disable-next-line no-console
+          console.warn('SensoryContent: unexpected list shape', list)
+          setItems([])
+        }
+
+        if (Array.isArray(favs)) setFavorites(favs)
+        else if (Array.isArray((favs as any)?.data)) setFavorites((favs as any).data)
+        else {
+          // eslint-disable-next-line no-console
+          console.warn('SensoryContent: unexpected favorites shape', favs)
+          setFavorites([])
+        }
       })
       .catch((err) => setError(String(err?.body?.message || err?.message || err)))
       .finally(() => setLoading(false))

@@ -10,7 +10,11 @@ export default function QuestsPage() {
         setLoading(true)
         poiService.listQuests()
             .then((res) => {
-                setQuests(res)
+                // Defensive: ensure we always set an array so .map won't crash
+                if (Array.isArray(res)) setQuests(res)
+                else if (res && (res as any).data && Array.isArray((res as any).data)) setQuests((res as any).data)
+                else if (res) setQuests([res])
+                else setQuests([])
             })
             .catch((err) => setError(String(err?.body?.message || err?.message || err)))
             .finally(() => setLoading(false))

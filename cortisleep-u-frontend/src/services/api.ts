@@ -1,7 +1,14 @@
 const DEFAULT_API_URL = 'http://localhost:8081'
 
 function getBaseUrl() {
-  return (import.meta.env.VITE_API_URL as string) || DEFAULT_API_URL
+  // Distinguish between the env var being undefined vs explicitly set to empty string.
+  // When VITE_API_URL is explicitly set to an empty string (as in the `dev:mock` script),
+  // we want to return '' so the frontend uses relative paths and the in-browser MSW
+  // service worker can intercept requests. If the env var is undefined, fall back to
+  // the default API URL (useful when running against a real backend).
+  const env = (import.meta.env.VITE_API_URL as string | undefined)
+  if (env !== undefined) return env
+  return DEFAULT_API_URL
 }
 
 function getAccessToken() {

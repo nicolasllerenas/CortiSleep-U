@@ -10,7 +10,15 @@ export default function FocusSessionPage() {
         setLoading(true)
         checkinService.getMySessions()
             .then((res) => {
-                setSessions(res)
+                const payload = (res as any)
+                if (Array.isArray(payload)) setSessions(payload)
+                else if (Array.isArray(payload?.data)) setSessions(payload.data)
+                else {
+                    // unexpected shape, coerce to empty list and warn
+                    // eslint-disable-next-line no-console
+                    console.warn('FocusSession: unexpected response', payload)
+                    setSessions([])
+                }
             })
             .catch((err) => setError(String(err?.body?.message || err?.message || err)))
             .finally(() => setLoading(false))
