@@ -11,11 +11,69 @@ export type UserDto = {
   name?: string
 }
 
-export type CheckInRequest = Record<string, any>
-export type CheckInResponse = Record<string, any>
+export type CheckInRequest = {
+  locationName?: string
+  latitude?: number | null
+  longitude?: number | null
+  moodScore?: number | null
+  stressLevel?: number | null
+  energyLevel?: number | null
+  notes?: string | null
+  // frontend may send a date string (YYYY-MM-DD) but backend DTO currently doesn't include it;
+  // backend may derive date from checkInTime. Keep optional here for flexibility.
+  date?: string | null
+}
 
-export type ProfileRequest = Record<string, any>
-export type ProfileResponse = Record<string, any>
+export type CheckInResponse = {
+  id?: number
+  userId?: number
+  locationName?: string
+  latitude?: number | null
+  longitude?: number | null
+  moodScore?: number | null
+  stressLevel?: number | null
+  energyLevel?: number | null
+  notes?: string | null
+  date?: string | null
+  checkInTime?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
+}
+
+export type ProfileRequest = {
+  alias?: string
+  faculty?: string
+  semester?: number | null
+  career?: string
+  bio?: string
+  avatarUrl?: string
+  birthDate?: string | null // YYYY-MM-DD
+  stressLevel?: number | null
+  sleepGoalHours?: number | null
+  screenTimeLimitMinutes?: number | null
+  preferredSenseType?: SenseType | null
+}
+
+export type ProfileResponse = {
+  id?: number
+  userId?: number
+  userEmail?: string
+  fullName?: string
+  alias?: string
+  faculty?: string
+  semester?: number | null
+  career?: string
+  bio?: string
+  avatarUrl?: string
+  birthDate?: string | null
+  age?: number | null
+  totalPoints?: number | null
+  stressLevel?: number | null
+  sleepGoalHours?: number | null
+  screenTimeLimitMinutes?: number | null
+  preferredSenseType?: SenseType | null
+  createdAt?: string | null
+}
 
 export type POIResponse = {
   id?: number

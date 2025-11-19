@@ -24,10 +24,13 @@ export const handlers = [
   // Auth register (mocked same shape as login)
   rest.post(`${API_BASE}/auth/register`, async (req: any, res: any, ctx: any) => {
     const body = await req.json()
+    const first = body.firstName || ''
+    const last = body.lastName || ''
+    const fullName = `${first} ${last}`.trim()
     // return tokens and a mocked user id
     return res(
       ctx.status(201),
-      ctx.json({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token', user: { id: Math.floor(Math.random()*1000)+4, email: body.email, fullName: body.name ?? '' } }),
+      ctx.json({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token', user: { id: Math.floor(Math.random()*1000)+4, email: body.email, fullName } }),
     )
   }),
 
@@ -69,39 +72,78 @@ export const handlers = [
   }),
 
   // Profile - get my profile
-  rest.get(`${API_BASE}/profile/me`, (_req: any) => {
-    const body = JSON.stringify({ id: 1, name: 'Mock User', email: 'mock@example.com' })
+  rest.get(`${API_BASE}/profiles/me`, (_req: any) => {
+    const body = JSON.stringify({
+      id: 1,
+      fullName: 'Mock User',
+      userEmail: 'mock@example.com',
+      alias: 'mocky',
+      faculty: 'Facultad de Prueba',
+      semester: 3,
+      career: 'Ingeniería',
+      bio: 'Este es un perfil de prueba.',
+      avatarUrl: '/assets/mock-avatar.jpg',
+      birthDate: '2000-05-17',
+      age: 25,
+      totalPoints: 420,
+      stressLevel: 4,
+      sleepGoalHours: 8,
+      screenTimeLimitMinutes: 120,
+      preferredSenseType: 'AUDIO',
+    })
     return new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
   }),
 
   // Profile - update
-  rest.put(`${API_BASE}/profile/me`, async (req: any) => {
+  rest.put(`${API_BASE}/profiles/me`, async (req: any) => {
     const body = await req.json()
-    const resp = JSON.stringify({ id: 1, name: body.name ?? 'Mock User', email: 'mock@example.com' })
+    // prefer an explicit fullName, fallback to alias or keep a default
+    const fullName = body.fullName || body.alias || 'Mock User'
+    const resp = JSON.stringify({
+      id: 1,
+      fullName,
+      userEmail: 'mock@example.com',
+      alias: body.alias || 'mocky',
+      faculty: body.faculty || 'Facultad de Prueba',
+      semester: body.semester ?? 3,
+      career: body.career || 'Ingeniería',
+      bio: body.bio || 'Este es un perfil de prueba.',
+      avatarUrl: body.avatarUrl || '/assets/mock-avatar.jpg',
+      birthDate: body.birthDate || '2000-05-17',
+      age: 25,
+      totalPoints: 420,
+      stressLevel: body.stressLevel ?? 4,
+      sleepGoalHours: body.sleepGoalHours ?? 8,
+      screenTimeLimitMinutes: body.screenTimeLimitMinutes ?? 120,
+      preferredSenseType: body.preferredSenseType ?? 'AUDIO',
+    })
     return new Response(resp, { status: 200, headers: { 'Content-Type': 'application/json' } })
   }),
 
   // Profile points
-  rest.get(`${API_BASE}/profile/me/points`, (_req: any) => {
+  rest.get(`${API_BASE}/profiles/me/points`, (_req: any) => {
     return new Response(JSON.stringify(123), { status: 200, headers: { 'Content-Type': 'application/json' } })
   }),
 
   // Checkins
   rest.get(`${API_BASE}/checkins/me`, (_req: any) => {
     const body = JSON.stringify([
-      { id: 1, userId: 1, date: '2025-11-10', mood: 'HAPPY', note: 'Good day' },
-      { id: 2, userId: 1, date: '2025-11-09', mood: 'TIRED', note: 'Slept late' },
+      { id: 1, userId: 1, date: '2025-11-10', notes: 'Good day', stressLevel: 3 },
+      { id: 2, userId: 1, date: '2025-11-09', notes: 'Slept late', stressLevel: 6 },
     ])
     return new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
   }),
 
   rest.post(`${API_BASE}/checkins`, async (req: any) => {
     const body = await req.json()
-    return new Response(JSON.stringify({ id: Math.floor(Math.random() * 1000) + 3, ...body }), { status: 201, headers: { 'Content-Type': 'application/json' } })
+    // ensure stressLevel exists in mocked response (backend may default it)
+    const respBody = { id: Math.floor(Math.random() * 1000) + 3, ...body }
+  if (respBody.stressLevel === undefined || respBody.stressLevel === null) respBody.stressLevel = 5
+    return new Response(JSON.stringify(respBody), { status: 201, headers: { 'Content-Type': 'application/json' } })
   }),
 
   // POI - nearby and visit
-  rest.post(`${API_BASE}/pois/nearby`, async (_req: any) => {
+  rest.post(`${API_BASE}/poi/nearby`, async (_req: any) => {
     const body = JSON.stringify([
       { id: 10, name: 'Central Park', lat: -33.0, lon: -71.6, distance: 120 },
       { id: 11, name: 'Museum', lat: -33.01, lon: -71.61, distance: 400 },
@@ -109,7 +151,7 @@ export const handlers = [
     return new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
   }),
 
-  rest.post(`${API_BASE}/pois/visit`, async (req: any) => {
+  rest.post(`${API_BASE}/poi/visit`, async (req: any) => {
     const body = await req.json()
     return new Response(JSON.stringify({ success: true, visitedAt: new Date().toISOString(), poiId: body.poiId }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   }),

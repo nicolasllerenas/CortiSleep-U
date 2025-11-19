@@ -1,4 +1,6 @@
-const DEFAULT_API_URL = 'http://localhost:8081'
+// Default API base should include the backend context path so we don't accidentally
+// call the wrong routes (which breaks MSW passthrough and triggers CORS issues).
+const DEFAULT_API_URL = 'http://localhost:8081/api/v1'
 
 function getBaseUrl() {
   // Distinguish between the env var being undefined vs explicitly set to empty string.
@@ -7,7 +9,12 @@ function getBaseUrl() {
   // service worker can intercept requests. If the env var is undefined, fall back to
   // the default API URL (useful when running against a real backend).
   const env = (import.meta.env.VITE_API_URL as string | undefined)
+  // If the env var is explicitly set to an empty string, return '' so the
+  // frontend uses relative paths (useful for MSW in-browser mocks).
   if (env !== undefined) return env
+
+  // env is undefined -> fall back to a sensible default that includes the
+  // backend context path.
   return DEFAULT_API_URL
 }
 

@@ -46,7 +46,9 @@ async function run() {
     const endpoints = ['/auth/login', '/auth/register', '/senses']
     for (const ep of endpoints) {
       const result = await page.evaluate(async (path) => {
-        const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'a@b.c', password: 'x', name: 'Tester' }) })
+        // send firstName/lastName for register path, keep login payload minimal
+        const payload = path.endsWith('/register') ? { email: 'a@b.c', password: 'x', firstName: 'Tester', lastName: 'User' } : { email: 'a@b.c', password: 'x' }
+        const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
         const text = await res.text()
         let json = null
         try { json = text && res.headers.get('content-type')?.includes('application/json') ? JSON.parse(text) : text } catch (e) { json = text }

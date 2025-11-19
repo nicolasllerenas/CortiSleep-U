@@ -25,7 +25,10 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'POST' && path === '/auth/register') {
       const body = await readBody(req)
-      return res.end(JSON.stringify({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token', user: { id: Math.floor(Math.random()*1000)+4, email: body.email, fullName: body.name || '' } }))
+      const first = body.firstName || ''
+      const last = body.lastName || ''
+      const fullName = `${first} ${last}`.trim()
+      return res.end(JSON.stringify({ accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token', user: { id: Math.floor(Math.random()*1000)+4, email: body.email, fullName } }))
     }
 
     if (req.method === 'POST' && path === '/auth/refresh') {
@@ -40,7 +43,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === 'GET' && path === '/profile/me') {
-      return res.end(JSON.stringify({ id: 1, name: 'Mock User', email: 'mock@example.com' }))
+      return res.end(JSON.stringify({ id: 1, fullName: 'Mock User', userEmail: 'mock@example.com' }))
     }
 
     if (req.method === 'GET' && path === '/checkins/me') {

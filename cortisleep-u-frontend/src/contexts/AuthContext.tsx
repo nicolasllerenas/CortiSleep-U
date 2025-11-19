@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import authService from '../services/auth'
 
 type LoginPayload = { email: string; password: string }
-type RegisterPayload = { email: string; password: string; name?: string }
+type RegisterPayload = { email: string; password: string; firstName: string; lastName: string }
 
 type AuthContextValue = {
   isAuthenticated: boolean
@@ -47,9 +47,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   function logout() {
-    authService.logoutLocal()
-    setIsAuthenticated(false)
+    // perform server logout and flush screen time; update auth state when done
+    authService.logoutServer().finally(() => setIsAuthenticated(false))
   }
+
+  useEffect(() => {
+    function onBeforeUnload() {
+      try {
+        authService.flushSessionKeepalive()
+      } catch (e) {}
+    }
+    window.addEventListener('beforeunload', onBeforeUnload)
+    return () => window.removeEventListener('beforeunload', onBeforeUnload)
+  }, [])
 
   const value: AuthContextValue = {
     isAuthenticated,

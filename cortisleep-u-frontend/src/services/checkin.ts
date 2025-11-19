@@ -1,13 +1,12 @@
 import api from './api'
+import type { CheckInRequest, CheckInResponse } from '../types'
 
-type CheckInRequest = Record<string, any>
-
-export async function createCheckIn(payload: CheckInRequest) {
+export async function createCheckIn(payload: CheckInRequest): Promise<CheckInResponse> {
   const res = await api.post('/checkins', payload)
   return (res && (res as any).data) || res
 }
 
-export async function getCheckInById(id: number) {
+export async function getCheckInById(id: number): Promise<CheckInResponse> {
   const res = await api.get(`/checkins/${id}`)
   return (res && (res as any).data) || res
 }
@@ -19,6 +18,14 @@ export async function getMyCheckIns() {
 
 export async function getCheckInByDate(date: string) {
   const res = await api.get(`/checkins/me/date/${date}`)
+  return (res && (res as any).data) || res
+}
+export async function getTodayCheckIn(): Promise<CheckInResponse | null> {
+  const res = await api.get('/checkins/me/today')
+  return (res && (res as any).data) || res
+}
+export async function updateCheckIn(id: number, payload: Partial<CheckInRequest>): Promise<CheckInResponse> {
+  const res = await api.put(`/checkins/${id}`, payload)
   return (res && (res as any).data) || res
 }
 
@@ -40,4 +47,6 @@ export default {
   getCheckInByDate,
   getCheckInsByRange,
   getStats,
+  updateCheckIn,
+  getTodayCheckIn,
 }

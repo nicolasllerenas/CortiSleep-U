@@ -9,7 +9,8 @@ type Props = {
 export default function RegisterForm({ onSuccess, onCancel }: Props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { register } = useAuth()
@@ -19,7 +20,7 @@ export default function RegisterForm({ onSuccess, onCancel }: Props) {
     setError(null)
     setLoading(true)
     try {
-      await register({ email, password, name })
+      await register({ email, password, firstName, lastName })
       setLoading(false)
       onSuccess && onSuccess()
     } catch (err: any) {
@@ -31,14 +32,27 @@ export default function RegisterForm({ onSuccess, onCancel }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 text-left">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Nombre</label>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
-        />
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Nombre</label>
+          <input
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            type="text"
+            required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Apellido</label>
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            type="text"
+            required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+          />
+        </div>
       </div>
 
       <div>
