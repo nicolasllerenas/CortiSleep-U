@@ -1,6 +1,7 @@
 package com.utec.resetu.senses.domain.model;
 
 import com.utec.resetu.auth.domain.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
@@ -40,6 +41,7 @@ public class UserSensoryPreference {
 
     @JoinColumn(name = "user_id", nullable = false)
 
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

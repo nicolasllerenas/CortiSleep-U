@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy } from 'react'
+import { useState } from 'react'
 import appLogo from './assets/Reset-U_logo.svg'
 import appTextLogo from './assets/Reset-U_text_logo.svg'
 import LoginForm from './components/LoginForm'
@@ -12,12 +12,11 @@ import FocusSessionPage from './pages/FocusSessionPage'
 import ScreenTimePage from './pages/ScreenTimePage'
 import SensoryContentPage from './pages/SensoryContentPage'
 import QuestsPage from './pages/QuestsPage'
+import SleepPage from './pages/SleepPage'
 import MainMenu from './components/MainMenu'
 
-const DevGallery = lazy(() => import('./pages/DevGallery'))
-
 function AppInner() {
-  const [view, setView] = useState<'home' | 'login' | 'register' | 'profile' | 'checkins' | 'dev-gallery' | 'rewards' | 'poi' | 'focus' | 'screentime' | 'sensory' | 'quests' | 'menu'>('home')
+  const [view, setView] = useState<'home' | 'login' | 'register' | 'profile' | 'checkins' | 'sleep' | 'rewards' | 'poi' | 'focus' | 'screentime' | 'sensory' | 'quests'>('home')
   const { isAuthenticated, logout } = useAuth()
 
   function handleLoginSuccess() {
@@ -64,18 +63,7 @@ function AppInner() {
          <MainMenu current={view as any} onNavigate={(v) => setView(v)} />
        )}
 
-       {/* Dev-only quick access to preview all pages */}
-       {import.meta.env.DEV && (
-         <div className="mt-4">
-           <button
-             onClick={() => setView('dev-gallery')}
-             className="px-3 py-2 text-xs border rounded text-black font-semibold"
-             style={{ backgroundColor: '#D9A441' }}
-           >
-             Preview all pages (dev)
-           </button>
-         </div>
-       )}
+       {/* Dev gallery removed */}
 
   <div className="mt-4 text-center">
          {view === 'home' && (
@@ -98,19 +86,16 @@ function AppInner() {
            </div>
          ) : (
            <>
-             {view === 'profile' && <ProfilePage />}
-             {view === 'checkins' && <CheckinsPage />}
+            {view === 'profile' && <ProfilePage />}
+            {view === 'checkins' && <CheckinsPage />}
+            {view === 'sleep' && <SleepPage />}
             {view === 'rewards' && <RewardsPage />}
             {view === 'poi' && <POIPage />}
             {view === 'focus' && <FocusSessionPage />}
             {view === 'screentime' && <ScreenTimePage />}
             {view === 'sensory' && <SensoryContentPage />}
             {view === 'quests' && <QuestsPage />}
-             {view === 'dev-gallery' && (
-               <Suspense fallback={<div>Loading preview...</div>}>
-                 <DevGallery />
-               </Suspense>
-             )}
+            {/* Dev gallery removed */}
 
              {view === 'login' && (
                <LoginForm onSuccess={() => handleLoginSuccess()} onCancel={() => setView('home')} />
@@ -123,30 +108,9 @@ function AppInner() {
          )}
        </div>
 
-       {/* Bottom nav for mobile */}
-       {isAuthenticated && (
-         <div className="sm:hidden fixed bottom-4 left-0 right-0 mx-auto max-w-md px-4">
-           <div className="bg-white/90 backdrop-blur border rounded-xl shadow-md flex justify-around py-2">
-             <button onClick={() => setView('profile')} className={`px-3 py-2 text-sm ${view==='profile' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Perfil</button>
-             <button onClick={() => setView('checkins')} className={`px-3 py-2 text-sm ${view==='checkins' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Check-ins</button>
-             <button onClick={() => setView('home')} className={`px-3 py-2 text-sm ${view==='home' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Inicio</button>
-               <button onClick={() => setView('menu')} className={`px-3 py-2 text-sm ${view==='menu' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Menu</button>
-           </div>
-         </div>
-       )}
+       {/* Bottom nav removed - using top MainMenu for navigation */}
 
-        {/* Menu overlay for mobile when user taps Menu */}
-        {isAuthenticated && view === 'menu' && (
-          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-            <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-4">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-semibold">Menú</h3>
-                <button onClick={() => setView('home')} className="px-3 py-1 border rounded">Cerrar</button>
-              </div>
-              <MainMenu current={view as any} onNavigate={(v) => { setView(v); window.scrollTo({top:0}); }} />
-            </div>
-          </div>
-        )}
+        {/* Mobile menu overlay removed - top MainMenu will be used on all sizes */}
      </div>
    </div>
  )

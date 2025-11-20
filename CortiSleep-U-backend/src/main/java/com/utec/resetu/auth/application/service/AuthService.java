@@ -31,6 +31,7 @@ public class AuthService {
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final com.utec.resetu.profile.application.service.ProfileService profileService;
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
@@ -48,6 +49,18 @@ public class AuthService {
         
         user = userRepository.save(user);
         log.info("Usuario registrado exitosamente con ID: {}", user.getId());
+
+        // Create an initial user profile automatically using the provided names
+        try {
+            var profileReq = com.utec.resetu.profile.application.dto.ProfileRequest.builder()
+                    .alias((request.getFirstName() + " " + request.getLastName()).trim())
+                    .build();
+            profileService.createProfile(user.getId(), profileReq);
+            log.info("Perfil inicial creado para usuario ID: {}", user.getId());
+        } catch (Exception e) {
+            // Non-fatal: log and continue. If profile creation fails, user is still registered.
+            log.warn("No se pudo crear el perfil inicial para el usuario ID: {} — {}", user.getId(), e.getMessage());
+        }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String accessToken = jwtService.generateToken(userDetails);

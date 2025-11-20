@@ -4,7 +4,7 @@ import com.utec.resetu.senses.domain.model.SenseType;
 
 import com.utec.resetu.senses.domain.model.SensoryContent;
 
-import com.utec.resetu.senses.domain.model.UserSensoryPreference;
+import com.utec.resetu.senses.application.dto.UserSensoryPreferenceDto;
 
 import com.utec.resetu.senses.domain.repository.SensoryContentRepository;
 
@@ -72,13 +72,15 @@ public class SensoryContentController {
 
     @Operation(summary = "Obtener mis favoritos")
 
-    public ResponseEntity<ApiResponse<List<UserSensoryPreference>>> getMyFavorites() {
+    public ResponseEntity<ApiResponse<java.util.List<UserSensoryPreferenceDto>>> getMyFavorites() {
 
         Long userId = currentUserService.getCurrentUserId();
 
         var favorites = preferenceRepository.findByUser_IdAndFavoriteTrue(userId);
 
-        return ResponseEntity.ok(ApiResponse.success("Mis favoritos", favorites));
+        var dtos = favorites.stream().map(UserSensoryPreferenceDto::fromEntity).toList();
+
+        return ResponseEntity.ok(ApiResponse.success("Mis favoritos", dtos));
 
     }
 

@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import lombok.Data;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -35,7 +33,6 @@ public class CheckInRequest {
     @Min(value = 1, message = "El nivel de energía debe ser entre 1 y 10")
     @Max(value = 10, message = "El nivel de energía debe ser entre 1 y 10")
     private Integer energyLevel;
-    
     @Size(max = 500, message = "Las notas no pueden exceder 500 caracteres")
     private String notes;
 }

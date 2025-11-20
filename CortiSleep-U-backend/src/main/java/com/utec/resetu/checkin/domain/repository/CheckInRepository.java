@@ -16,8 +16,8 @@ public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
     
     List<CheckIn> findByUserIdAndCheckInTimeBetween(Long userId, LocalDateTime start, LocalDateTime end);
     
-    @Query("SELECT c FROM CheckIn c WHERE c.userId = :userId AND DATE(c.checkInTime) = CURRENT_DATE")
-    List<CheckIn> findTodayCheckInsByUserId(@Param("userId") Long userId);
+    // Removed custom DATE() JPQL query because JPQL/Hibernate do not support DATE() in a portable way.
+    // Use the existing findByUserIdAndCheckInTimeBetween(...) from the service layer to obtain today's checkins.
     
     @Query("SELECT AVG(c.moodScore) FROM CheckIn c WHERE c.userId = :userId AND c.moodScore IS NOT NULL")
     Double findAverageMoodScoreByUserId(@Param("userId") Long userId);

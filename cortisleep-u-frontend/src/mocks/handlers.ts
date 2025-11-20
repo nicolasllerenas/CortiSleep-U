@@ -1,16 +1,18 @@
-import * as msw from 'msw'
+// Use the named `rest` export from msw. This matches MSW v2's public API
+// and avoids Vite's bundler warnings about deep ESM/CJS interop.
+import { http } from 'msw'
 
-// Vite's dep prebundling can sometimes change how named exports are presented at
-// runtime (CJS/ESM interop). Use a resilient access pattern so the browser-side
-// module always gets the `rest` helper whether it is a named export or a
-// property on the default/namespace object.
-// msw exports changed across versions/builds; try common locations for the
-// REST helper: named `rest`, `default.rest`, or the `http` export which
-// provides similar `get/post` helpers in newer msw builds.
-const rest = (msw as any).rest ?? (msw as any).default?.rest ?? (msw as any).http ?? (msw as any).default?.http
+// MSW v2 exposes the HTTP helpers as `http.get/post/...`.
+// Provide a `rest` alias for compatibility with older handler code.
+const rest = http as any
 
 // Helper: base path used by api.ts (adjust if your api uses /api prefix)
 const API_BASE = '' // leave empty to match calls like '/auth/login' or '/senses'
+
+// In-memory mock store for sleep entries (development only)
+let mockSleepEntries: any[] = [
+  { id: 1, userId: 1, sleepAt: '2025-11-10T23:30:00Z', wakeAt: '2025-11-11T07:30:00Z', durationMinutes: 480, createdAt: '2025-11-11T07:30:01Z' }
+]
 
 export const handlers = [
   // Auth login
@@ -35,7 +37,7 @@ export const handlers = [
   }),
 
   // Auth refresh
-  rest.post(`${API_BASE}/auth/refresh`, async (req: any, res: any, ctx: any) => {
+  rest.post(`${API_BASE}/auth/refresh`, async (_req: any, res: any, ctx: any) => {
     // normally would validate refreshToken, here always return a new access token
     return res(ctx.status(200), ctx.json({ accessToken: 'mock-access-token-refreshed' }))
   }),
@@ -132,6 +134,21 @@ export const handlers = [
       { id: 2, userId: 1, date: '2025-11-09', notes: 'Slept late', stressLevel: 6 },
     ])
     return new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
+  }),
+
+  // Sleep entries (manual)
+  rest.post(`${API_BASE}/sleep`, async (req: any, res: any, ctx: any) => {
+    const body = await req.json()
+    const sleepAt = new Date(body.sleepAt)
+    const wakeAt = new Date(body.wakeAt)
+    const duration = Math.max(0, Math.round((wakeAt.getTime() - sleepAt.getTime()) / 60000))
+    const entry = { id: Math.floor(Math.random() * 100000) + 2, userId: 1, sleepAt: sleepAt.toISOString(), wakeAt: wakeAt.toISOString(), durationMinutes: duration, createdAt: new Date().toISOString() }
+    mockSleepEntries.unshift(entry)
+    return res(ctx.status(201), ctx.json(entry))
+  }),
+
+  rest.get(`${API_BASE}/sleep/me`, (_req: any, res: any, ctx: any) => {
+    return res(ctx.status(200), ctx.json(mockSleepEntries))
   }),
 
   rest.post(`${API_BASE}/checkins`, async (req: any) => {

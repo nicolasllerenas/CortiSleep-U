@@ -9,6 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import io.jsonwebtoken.io.DecodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,7 +87,29 @@ public class JwtService {
     }
 
     private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(secretKey);
+        } catch (DecodingException ex) {
+            // If the configured secret is not base64, fall back to using the raw
+            // UTF-8 bytes of the secret string (convenient for local dev values).
+            keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        }
+
+        // Ensure the key is at least 256 bits (32 bytes). If it's shorter, derive
+        // a 256-bit key deterministically by hashing the secret with SHA-256.
+        if (keyBytes.length < 32) {
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                keyBytes = digest.digest(secretKey.getBytes(StandardCharsets.UTF_8));
+            } catch (NoSuchAlgorithmException e) {
+                // Extremely unlikely: fall back to padding/truncation to 32 bytes
+                byte[] padded = new byte[32];
+                System.arraycopy(keyBytes, 0, padded, 0, Math.min(keyBytes.length, 32));
+                keyBytes = padded;
+            }
+        }
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

@@ -82,9 +82,11 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  /* Make buttons neutral by default — specific button variants should set background explicitly */
+  background-color: transparent;
+  color: inherit;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.12s, box-shadow 0.12s;
 }
 button:hover {
   border-color: #646cff;
@@ -102,8 +104,9 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
+  /* Keep default button neutral in light mode as well; use .btn-primary / .btn-cancel for explicit styles */
   button {
-    background-color: #f9f9f9;
+    background-color: transparent;
   }
 }
 
@@ -123,6 +126,54 @@ button:focus-visible {
 
 .card-plain { background: transparent; box-shadow: none; border: none }
 
+/* Sensory content specific overrides: make option blocks and cards white with dark text */
+.sensory-content .block-option,
+.sensory-content .card,
+.sensory-content .sensory-option {
+  background-color: #ffffff !important;
+  color: #111827 !important; /* gray-900 */
+  border-color: #e6e9ee !important;
+}
+
+.sensory-content .block-option a,
+.sensory-content .sensory-option a {
+  color: #0f172a !important;
+}
+
+/* Explicit class targets for sensory content components */
+.sensory-content .sensory-card {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: #e6e9ee !important;
+}
+.sensory-content .sensory-card .rounded-lg {
+  background-color: transparent; /* keep inner element transparent so wrapper controls bg */
+}
+.sensory-content .sensory-expanded {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+/* Enforce consistent rounded corners for sensory content components */
+.sensory-content .sensory-card,
+.sensory-content .sensory-expanded,
+.sensory-content .block-option,
+.sensory-content .card {
+  border-radius: 1rem !important; /* visually consistent rounded corners */
+  overflow: hidden; /* ensure children don't escape the radius */
+}
+
+/* Add a subtle inner separation so content doesn't sit flush with the card edge */
+.sensory-content .sensory-card {
+  border: 1px solid #e6e9ee !important;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04), inset 0 0 0 1px rgba(15,23,42,0.02);
+  background-clip: padding-box;
+}
+
+.sensory-content .sensory-card > .relative {
+  padding: 1rem; /* ensure inner container has extra breathing room */
+}
+
 /* Cancel button style (red) */
 .btn-cancel {
   background-color: #e53e3e; /* red */
@@ -134,3 +185,51 @@ button:focus-visible {
 .btn-cancel:hover { opacity: 0.95 }
 
 .btn-cancel:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(229,62,62,0.12) }
+
+  /* Favorite star button - distinct visual style */
+  .btn-fav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    border: 1px solid #d1d5db;
+    background: transparent;
+    color: #6b7280; /* gray-500 */
+    padding: 0;
+    transition: transform 0.12s ease, background-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn-fav:hover { transform: scale(1.06); border-color: #9ca3af; }
+  .btn-fav:focus { box-shadow: 0 0 0 4px rgba(99,102,241,0.12); outline: none; }
+  .btn-fav[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+  /* Active (favorited) state */
+  .btn-fav.active {
+    color: #f59e0b; /* amber-500 */
+    background: linear-gradient(180deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
+    border-color: rgba(245,158,11,0.22);
+    box-shadow: 0 4px 10px rgba(245,158,11,0.08);
+  }
+
+  /* Pulse animation for active toggle */
+  @keyframes fav-pulse {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  .btn-fav.pulse {
+    animation: fav-pulse 300ms ease;
+  }
+
+  /* Small spinner for pending state (used inside button) */
+  .fav-spinner {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    stroke: currentColor;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+

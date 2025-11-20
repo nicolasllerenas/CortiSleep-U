@@ -151,3 +151,17 @@ export type AppUsage = Record<string, any>
 export type ScreenTimeStats = Record<string, any>
 
 export { default as api } from '../services/api'
+
+export type SleepEntryRequest = {
+  sleepAt: string // ISO datetime
+  wakeAt: string // ISO datetime
+}
+
+export type SleepEntryResponse = {
+  id?: number
+  userId?: number
+  sleepAt?: string
+  wakeAt?: string
+  durationMinutes?: number
+  createdAt?: string
+}

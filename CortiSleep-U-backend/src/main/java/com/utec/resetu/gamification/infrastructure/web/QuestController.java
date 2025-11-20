@@ -28,7 +28,7 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/quests")
+@RequestMapping({"/quests","/gamification/quests"})
 
 @RequiredArgsConstructor
 

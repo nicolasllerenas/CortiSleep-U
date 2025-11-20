@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import checkinService from '../services/checkin'
-import type { CheckInResponse } from '../types'
+import sleepService from '../services/sleep'
+import type { CheckInResponse, SleepEntryResponse } from '../types'
 
 export default function CheckinsPage() {
   const [checkins, setCheckins] = useState<CheckInResponse[]>([])
@@ -23,6 +24,22 @@ export default function CheckinsPage() {
       .finally(() => setLoading(false))
   }, [])
 
+  // fetch today's sleep summary for quick glance
+  const [todaySleep, setTodaySleep] = useState<SleepEntryResponse | null>(null)
+  async function refreshTodaySleep() {
+    try {
+      const entries = await sleepService.getMySleepEntries()
+      const rows = Array.isArray(entries) ? entries : []
+      const today = new Date().toISOString().slice(0, 10) // YYYY-MM-DD
+      const found = rows.find((e: any) => String(e?.sleepAt ?? e?.createdAt ?? '').slice(0, 10) === today)
+      setTodaySleep((found ?? null) as SleepEntryResponse | null)
+    } catch (e) {
+      // ignore
+      setTodaySleep(null)
+    }
+  }
+  useEffect(() => { refreshTodaySleep() }, [])
+
   async function handleCreate() {
     setError(null)
     setLoading(true)
@@ -40,6 +57,7 @@ export default function CheckinsPage() {
       const payload: any = { notes }
   if (stressLevel !== '') payload.stressLevel = Number(stressLevel)
       await checkinService.createCheckIn(payload)
+  await refreshTodaySleep()
       // try to refresh list
       const list = await checkinService.getMyCheckIns()
       const rows = Array.isArray(list) ? list : (list?.content ?? [])
@@ -52,6 +70,32 @@ export default function CheckinsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // quick-create sleep modal
+  const [showSleepModal, setShowSleepModal] = useState(false)
+  const [sleepAt, setSleepAt] = useState('')
+  const [wakeAt, setWakeAt] = useState('')
+  const [sleepLoading, setSleepLoading] = useState(false)
+  const [sleepError, setSleepError] = useState<string | null>(null)
+
+  async function createSleepQuick() {
+    setSleepError(null)
+    setSleepLoading(true)
+    try {
+      if (!sleepAt || !wakeAt) throw new Error('Sleep and wake times are required')
+      const payload = { sleepAt: new Date(sleepAt).toISOString(), wakeAt: new Date(wakeAt).toISOString() }
+      await sleepService.createSleepEntry(payload)
+      setShowSleepModal(false)
+      setSleepAt('')
+      setWakeAt('')
+      await refreshTodaySleep()
+      const list = await checkinService.getMyCheckIns()
+      const rows = Array.isArray(list) ? list : (list?.content ?? [])
+      setCheckins(rows)
+    } catch (err: any) {
+      setSleepError(String(err?.body?.message || err?.message || err))
+    } finally { setSleepLoading(false) }
   }
 
   // edit flow
@@ -90,6 +134,20 @@ export default function CheckinsPage() {
 
   return (
     <div className="text-left space-y-4">
+      {/* Today's sleep summary + quick-create CTA */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold">Mis Check-ins</h2>
+          {todaySleep ? (
+            <p className="text-sm text-gray-700">Sueño de hoy: {todaySleep.durationMinutes ?? '—'} minutos {todaySleep.sleepAt ? `(desde ${new Date(todaySleep.sleepAt).toLocaleTimeString()})` : ''}</p>
+          ) : (
+            <p className="text-sm text-gray-500">No hay registro de sueño para hoy.</p>
+          )}
+        </div>
+        <div>
+          <button onClick={() => setShowSleepModal(true)} className="px-3 py-2 btn-primary rounded-md">Añadir sueño</button>
+        </div>
+      </div>
       <h2 className="text-xl font-semibold">Mis Check-ins</h2>
       {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -154,6 +212,26 @@ export default function CheckinsPage() {
           ))}
         </ul>
       </div>
+
+      {/* Sleep quick-create modal */}
+      {showSleepModal && (
+        <div role="dialog" aria-modal="true" aria-label="Crear registro de sueño" className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-lg p-4 w-full max-w-md">
+            <h3 className="font-semibold mb-2">Registrar sueño</h3>
+            {sleepError && <p role="alert" className="text-sm text-red-600">{sleepError}</p>}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Hora de dormir</label>
+              <input aria-label="Hora de dormir" type="datetime-local" value={sleepAt} onChange={(e) => setSleepAt(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" />
+              <label className="block text-sm font-medium">Hora de despertar</label>
+              <input aria-label="Hora de despertar" type="datetime-local" value={wakeAt} onChange={(e) => setWakeAt(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" />
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={() => setShowSleepModal(false)} className="px-3 py-2 bg-gray-200 rounded">Cancelar</button>
+              <button onClick={createSleepQuick} disabled={sleepLoading} className="px-3 py-2 btn-primary rounded">{sleepLoading ? 'Enviando...' : 'Guardar'}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

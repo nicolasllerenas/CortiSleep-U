@@ -132,6 +132,15 @@ public class CheckInService {
         return checkInMapper.toResponse(checkIn);
     }
 
+    @Transactional(readOnly = true)
+    public CheckInResponse getTodayCheckIn(Long userId) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.toLocalDate().atStartOfDay();
+        List<CheckIn> list = checkInRepository.findByUserIdAndCheckInTimeBetween(userId, startOfDay, now);
+        if (list.isEmpty()) return null;
+        return checkInMapper.toResponse(list.get(0));
+    }
+
     public CheckInResponse getCheckInByDate(Long userId, LocalDate date) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.plusDays(1).atStartOfDay();
@@ -147,10 +156,9 @@ public class CheckInService {
 
     public CheckInResponse updateCheckIn(Long id, CheckInRequest request) {
         CheckIn checkIn = checkInRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("CheckIn no encontrado"));
-        CheckIn updated = checkInMapper.toEntity(request);
-        updated.setId(checkIn.getId());
-        updated.setUserId(checkIn.getUserId());
-        CheckIn saved = checkInRepository.save(updated);
+        // Update only editable fields on the existing entity to avoid nulling DB non-null columns
+        checkInMapper.updateEntityFromRequest(checkIn, request);
+        CheckIn saved = checkInRepository.save(checkIn);
         return checkInMapper.toResponse(saved);
     }
 
@@ -162,8 +170,10 @@ public class CheckInService {
     public List<CheckInResponse> getTodayCheckIns() {
         // TODO: Obtener userId del contexto de seguridad
         Long userId = 1L; // Placeholder
-        
-        List<CheckIn> todayCheckIns = checkInRepository.findTodayCheckInsByUserId(userId);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.toLocalDate().atStartOfDay();
+
+        List<CheckIn> todayCheckIns = checkInRepository.findByUserIdAndCheckInTimeBetween(userId, startOfDay, now);
         
         return todayCheckIns.stream()
                 .map(checkInMapper::toResponse)

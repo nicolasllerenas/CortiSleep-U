@@ -1,11 +1,9 @@
 package com.utec.resetu.checkin.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,12 +34,15 @@ public class CheckIn {
     
     @Column(name = "energy_level")
     private Integer energyLevel; // 1-10
-    
+
     @Column(name = "notes")
     private String notes;
     
     @Column(name = "check_in_time", nullable = false)
     private LocalDateTime checkInTime;
+
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -75,6 +76,21 @@ public class CheckIn {
         if (checkInTime == null) {
             checkInTime = LocalDateTime.now();
         }
+        if (date == null) {
+            // prefer deriving date from checkInTime if present
+            date = (checkInTime != null) ? checkInTime.toLocalDate() : LocalDate.now();
+        }
+        // provide sensible defaults for optional numeric fields so inserts from
+        // minimal frontend forms (which may only send date/notes) don't fail the DB
+        if (this.stressLevel == null) {
+            this.stressLevel = 5; // mid-scale default
+        }
+        if (this.moodScore == null) {
+            this.moodScore = null; // keep null unless provided
+        }
+        if (this.energyLevel == null) {
+            this.energyLevel = null;
+        }
     }
     
     @PreUpdate
@@ -98,10 +114,13 @@ public class CheckIn {
     public void setStressLevel(Integer stressLevel) { this.stressLevel = stressLevel; }
     public Integer getEnergyLevel() { return energyLevel; }
     public void setEnergyLevel(Integer energyLevel) { this.energyLevel = energyLevel; }
+    
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
     public LocalDateTime getCheckInTime() { return checkInTime; }
     public void setCheckInTime(LocalDateTime checkInTime) { this.checkInTime = checkInTime; }
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

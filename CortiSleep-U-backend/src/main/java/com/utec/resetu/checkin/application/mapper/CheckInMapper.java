@@ -21,6 +21,22 @@ public class CheckInMapper {
         return ci;
     }
 
+    /**
+     * Update an existing CheckIn entity with values from the request. Only updates
+     * editable fields; preserves date, checkInTime, createdAt and userId.
+     */
+    public void updateEntityFromRequest(CheckIn existing, CheckInRequest request) {
+        if (existing == null || request == null) return;
+        existing.setLocationName(request.getLocationName());
+        existing.setLatitude(request.getLatitude());
+        existing.setLongitude(request.getLongitude());
+        existing.setMoodScore(request.getMoodScore());
+        existing.setStressLevel(request.getStressLevel());
+        existing.setEnergyLevel(request.getEnergyLevel());
+        existing.setNotes(request.getNotes());
+        // Do NOT overwrite createdAt, date, checkInTime or userId here.
+    }
+
     public CheckInResponse toResponse(CheckIn checkIn) {
         if (checkIn == null) return null;
         CheckInResponse r = new CheckInResponse();
@@ -33,7 +49,8 @@ public class CheckInMapper {
         r.setStressLevel(checkIn.getStressLevel());
         r.setEnergyLevel(checkIn.getEnergyLevel());
         r.setNotes(checkIn.getNotes());
-        r.setCheckInTime(checkIn.getCheckInTime());
+    r.setDate(checkIn.getDate());
+    r.setCheckInTime(checkIn.getCheckInTime());
         r.setCreatedAt(checkIn.getCreatedAt());
         r.setUpdatedAt(checkIn.getUpdatedAt());
         return r;

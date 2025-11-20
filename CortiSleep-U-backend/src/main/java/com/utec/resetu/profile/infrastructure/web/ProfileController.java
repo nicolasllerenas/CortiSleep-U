@@ -1,6 +1,9 @@
+package com.utec.resetu.profile.infrastructure.web;
+
 import com.utec.resetu.profile.application.dto.ProfileRequest;
 import com.utec.resetu.profile.application.dto.ProfileResponse;
 import com.utec.resetu.profile.application.service.ProfileService;
+import com.utec.resetu.shared.security.CurrentUserService;
 import com.utec.resetu.shared.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,6 +51,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final CurrentUserService currentUserService;
 
     // CurrentUserService temporalmente omitido para resolver import; usar SecurityContext en una iteración posterior
 
@@ -61,7 +65,7 @@ public class ProfileController {
 
     ) {
 
-        Long userId = 1L;
+    Long userId = currentUserService.getCurrentUserId();
 
         ProfileResponse response = profileService.createProfile(userId, request);
 
@@ -77,7 +81,7 @@ public class ProfileController {
 
     public ResponseEntity<ApiResponse<ProfileResponse>> getMyProfile() {
 
-        Long userId = 1L;
+    Long userId = currentUserService.getCurrentUserId();
 
         ProfileResponse response = profileService.getProfileByUserId(userId);
 
@@ -95,7 +99,7 @@ public class ProfileController {
 
     ) {
 
-        Long userId = 1L;
+    Long userId = currentUserService.getCurrentUserId();
 
         ProfileResponse response = profileService.updateProfile(userId, request);
 
@@ -109,7 +113,7 @@ public class ProfileController {
 
     public ResponseEntity<ApiResponse<Void>> deleteProfile() {
 
-        Long userId = 1L;
+    Long userId = currentUserService.getCurrentUserId();
 
         profileService.deleteProfile(userId);
 
@@ -123,7 +127,7 @@ public class ProfileController {
 
     public ResponseEntity<ApiResponse<Integer>> getMyPoints() {
 
-        Long userId = 1L;
+    Long userId = currentUserService.getCurrentUserId();
 
         Integer points = profileService.getTotalPoints(userId);
 

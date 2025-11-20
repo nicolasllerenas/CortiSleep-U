@@ -2,6 +2,7 @@ type ViewKey =
   | 'home'
   | 'profile'
   | 'checkins'
+  | 'sleep'
   | 'rewards'
   | 'poi'
   | 'focus'
@@ -16,23 +17,26 @@ interface Props {
 
 export default function MainMenu({ current, onNavigate }: Props) {
   const items: { key: ViewKey; label: string }[] = [
+    { key: 'sleep', label: 'Sueño' },
     { key: 'profile', label: 'Perfil' },
     { key: 'checkins', label: 'Check-ins' },
     { key: 'rewards', label: 'Recompensas' },
     { key: 'poi', label: 'POI' },
     { key: 'focus', label: 'Focus' },
     { key: 'screentime', label: 'Screen Time' },
-    { key: 'sensory', label: 'Sensorial' },
+  { key: 'sensory', label: 'Contenido Sensorial' },
     { key: 'quests', label: 'Misiones' },
   ]
 
   return (
-    <div className="w-full mt-4">
+    <nav role="navigation" aria-label="Main menu" className="w-full mt-4">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {items.map((it) => (
           <button
             key={it.key}
             onClick={() => onNavigate(it.key)}
+            aria-label={`Navigate to ${it.label}`}
+            aria-current={current === it.key ? 'page' : undefined}
             className={`px-3 py-3 rounded-lg border border-gray-200 text-sm text-left flex items-center gap-3 transition-shadow ${current === it.key ? 'bg-[#56B1A6] ring-1 ring-[#3FA79A] shadow-sm' : 'bg-[#A9ECE4] hover:shadow-sm'}`}
             style={{ color: current === it.key ? '#ffffff' : '#04201c' }}
           >
@@ -85,6 +89,6 @@ export default function MainMenu({ current, onNavigate }: Props) {
           </button>
         ))}
       </div>
-    </div>
+    </nav>
   )
 }
