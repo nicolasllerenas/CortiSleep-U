@@ -47,6 +47,8 @@ Plataforma de bienestar universitario enfocada en estrés y sueño. Arquitectura
 	•	Datos sensibles → minimizar PII; cifrado en reposo; retención limitada.
 	•	Costos → un solo PostgreSQL para MVP; migrar a per-service si escala.
 
+---
+
 Ejecución local (dev)
 
 Rápido — pasos para levantar el proyecto en modo desarrollo en tu máquina.
