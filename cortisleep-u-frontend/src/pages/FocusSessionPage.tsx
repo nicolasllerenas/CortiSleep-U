@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import checkinService from '../services/focus'
+import focusService from '../services/focus'
 
 export default function FocusSessionPage() {
     const [sessions, setSessions] = useState<any[]>([])
@@ -8,7 +8,7 @@ export default function FocusSessionPage() {
     
     useEffect(() => {
         setLoading(true)
-        checkinService.getMySessions()
+        focusService.getMySessions()
             .then((res) => {
                 const payload = (res as any)
                 if (Array.isArray(payload)) setSessions(payload)

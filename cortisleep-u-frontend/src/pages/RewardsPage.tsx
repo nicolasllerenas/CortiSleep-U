@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import poiService from '../services/gamification/rewards'
+import rewardService from '../services/gamification/rewards'
 
 export default function RewardsPage() {
     const [rewards, setRewards] = useState<any[]>([])
@@ -8,7 +8,7 @@ export default function RewardsPage() {
     
     useEffect(() => {
         setLoading(true)
-        poiService.listRewards()
+        rewardService.listRewards()
                 .then((res) => {
                     const payload = (res as any)
                     if (Array.isArray(payload)) setRewards(payload)

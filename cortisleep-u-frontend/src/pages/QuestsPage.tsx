@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import poiService from '../services/gamification/quests'
+import questService from '../services/gamification/quests'
 
 export default function QuestsPage() {
     const [quests, setQuests] = useState<any[]>([])
@@ -8,7 +8,7 @@ export default function QuestsPage() {
     
     useEffect(() => {
         setLoading(true)
-        poiService.listQuests()
+        questService.listQuests()
             .then((res) => {
                 // Defensive: ensure we always set an array so .map won't crash
                 if (Array.isArray(res)) setQuests(res)
